@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EDA · 주말 베이커리 카페 팝업 입지</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<nav class="nav"><div class="nav-in">
+  <a class="logo" href="index.html">Weekend <span>Bakery</span> Popup</a>
+  <a class="tab" href="index.html">Overview</a>
+  <a class="tab on" href="eda.html">EDA</a>
+  <a class="tab" href="modeling.html">Modeling</a>
+  <a class="tab" href="insight.html">Insight</a>
+  <a class="tab" href="report.html">Report</a>
+</div></nav>
+
+<main>
+  <div class="hero">
+    <div class="eyebrow">탐색적 데이터 분석</div>
+    <h1>사람이 많이 지나간다고<br>카페가 잘 팔리지는 않았다</h1>
+    <p class="lead">상권 × 분기 21,741건(2021~2025)에서 주말 효율의 분포와, 효율을 높이는 상권 조건을 가설로 확인했습니다.</p>
+  </div>
+
+  <section id="metric">
+    <h2><small>1. 기준 정의</small>주말 유동인구 1천 명당 주말 카페·베이커리 매출</h2>
+    <div class="callout"><p><b>효율</b> = 카페·베이커리(커피-음료 + 제과점) 주말 매출 ÷ (토 + 일 유동인구 ÷ 1,000), 상권 × 분기, 원</p></div>
+    <p class="sub">결제한 사람이 지나간 사람인지 알 수 없어(배달·주민·법인카드 결제 포함) '전환율'이 아니라 <b>유동인구 대비 매출 효율</b>로 해석합니다.</p>
+  </section>
+
+  <section id="prep">
+    <h2><small>2. 결합과 전처리</small>결측치와 이상치를 이렇게 처리했다</h2>
+    <div class="tbl-wrap"><table>
+      <tr><th>항목</th><th>처리</th><th>근거</th></tr>
+      <tr><td>주말 유동인구가 너무 작은 행</td><td>하위 1%(8,666명 미만, 220행) 제외</td><td>분모가 작아 지표가 폭발. 예: 청계산원터골은 주말 유동인구 8~700명인데 1천 명당 매출이 최대 72억 원</td></tr>
+      <tr><td>집객시설 세부 열 빈칸</td><td>0으로 채움</td><td>원본에 0이 하나도 없고 빈칸만 있음 → 빈칸 = 시설 없음</td></tr>
+      <tr><td>주말 매출 0원 (246행)</td><td>유지, log(1 + x)</td><td>실제로 주말 매출이 없는 상권일 수 있음</td></tr>
+      <tr><td>카페 점포 수</td><td><code>유사_업종_점포_수</code> 사용</td><td>= 점포_수 + 프랜차이즈_점포_수 (전 행 일치)</td></tr>
+      <tr><td>연령대 비중의 분모</td><td>연령을 아는 매출 합계</td><td>연령 미상 매출 비율이 업종마다 다름 (카페 12.9%, 한식 21.3%)</td></tr>
+      <tr><td>파일 열 이름·분기 코드</td><td>2025년 영문 열 이름 통일, 연분기 코드 분리</td><td>그대로 붙이면 같은 내용이 다른 열로 갈라짐</td></tr>
+    </table></div>
+  </section>
+
+  <section id="dist">
+    <h2><small>3. 분포</small>상권 간 차이가 크고, 상권 유형이 기본 조건이다</h2>
+    <div class="grid g2">
+      <figure><img src="assets/fig/05_weekend_metric_hist.png" alt="주말 효율 분포" loading="lazy"><figcaption>중앙값 약 24.6만 원. 상위 25% 경계가 하위 25% 경계의 약 15배 → 모델 타겟은 log로 변환</figcaption></figure>
+      <figure><img src="assets/fig/07_metric_by_type_box.png" alt="상권 유형별 효율" loading="lazy"><figcaption>2025년 중앙값: 관광특구 319만 · 발달 138만 · 전통시장 51만 · 골목 12만 원. 누구나 예상하는 차이라, 이후 분석은 유형을 통제한다</figcaption></figure>
+    </div>
+  </section>
+
+  <section id="hypo">
+    <h2><small>4. 가설 확인</small>무엇이 효율을 높이나</h2>
+
+    <h3>가설 1. 주말 유동인구가 많다고 효율이 높은 것은 아니다 <span class="verdict v-yes">지지</span></h3>
+    <figure><img src="assets/fig/06_h1_foot_decile_box.png" alt="가설 1" loading="lazy"><figcaption>주말 유동인구와 주말 카페 매출의 상관 0.24(스피어만). 지표의 분모가 유동인구라 음의 관계는 일부 수식상 효과 → "많다고 좋은 건 아니다"까지만 주장</figcaption></figure>
+
+    <h3>가설 2. 머무는 사람이 많은 상권이 효율이 높다 <span class="verdict v-part">부분 지지</span></h3>
+    <figure><img src="assets/fig/08_h2_stay_metric_box.png" alt="가설 2" loading="lazy"><figcaption>같은 상권 유형 × 같은 유동인구 5분위 안에서 비교. 직장인구 ρ 0.31(2.9배), 집객시설 0.35(3.2배), 상주인구 −0.04(무관)</figcaption></figure>
+    <div class="callout warn"><b class="t">트러블슈팅 — 분모 함정</b><p>처음엔 '직장인구 ÷ 주말 유동인구' 같은 비율로 봤는데, 지표와 분모가 같아 상관이 부풀려졌다(무작위 값을 유동인구로 나눠도 상관 0.15). 비율 대신 원래 값으로, 같은 유형·같은 유동인구 수준끼리 다시 비교했다(직장인구 0.55 → 0.31).</p></div>
+
+    <h3>가설 3. 카페가 몰린 상권은 손님을 나눠 먹기보다 더 끌어온다 <span class="verdict v-yes">약하게 지지</span></h3>
+    <figure><img src="assets/fig/09_h3_density_metric_box.png" alt="가설 3" loading="lazy"><figcaption>점포가 많으면 합계 매출이 커지는 건 당연해 <b>점포당</b> 주말 매출로 비교. 점포 수 하 → 상 구간 1.9배(ρ 0.26) → 잠식보다 집적에 가깝다</figcaption></figure>
+  </section>
+
+  <section id="next">
+    <h2><small>EDA에서 모델링으로</small>효율 순위만으로는 '뻔한 답'이 나온다</h2>
+    <p class="sub">2025년 '유동인구 상 + 효율 상' 상위 30곳 중 25곳이 발달상권(잠실역·명동 등)이었습니다. 상권 유형이라는 기본 조건이 그대로 드러나, 후보는 <b>같은 조건 대비 효율이 몇 배인가</b>로 고르기로 했습니다.</p>
+    <p><a href="modeling.html">→ 1년 뒤 예측 모델 보기</a></p>
+  </section>
+</main>
+
+<footer>모두 상권 단위 상관관계이며 인과가 아닙니다. 상세: GitLab <code>reports/EDA_report_draft.md</code>, <code>notebooks/1.2~1.4</code></footer>
+</body>
+</html>

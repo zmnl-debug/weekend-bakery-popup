@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Insight · 주말 베이커리 카페 팝업 입지</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="assets/style.css">
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+<script src="assets/data.js"></script>
+<style>
+  .ctrl { display: grid; grid-template-columns: 1fr 1fr auto; gap: 14px 22px; align-items: end; margin: 6px 0 4px; }
+  .ctrl label { font-size: 14px; color: var(--ink-2); display: block; }
+  .ctrl label b { color: var(--ink); }
+  .ctrl input[type=range] { width: 100%; accent-color: var(--brand); }
+  .ctrl button { border: 1px solid var(--line); background: var(--surface); border-radius: 10px; padding: 8px 14px; font: inherit; font-size: 14px; cursor: pointer; }
+  .q1 { color: #2e7d32; font-weight: 700; } .q2 { color: #4c78a8; font-weight: 700; }
+  .q3 { color: #c96a00; font-weight: 700; } .q4 { color: #777; font-weight: 700; }
+  @media (max-width: 860px) { .ctrl { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<nav class="nav"><div class="nav-in">
+  <a class="logo" href="index.html">Weekend <span>Bakery</span> Popup</a>
+  <a class="tab" href="index.html">Overview</a>
+  <a class="tab" href="eda.html">EDA</a>
+  <a class="tab" href="modeling.html">Modeling</a>
+  <a class="tab on" href="insight.html">Insight</a>
+  <a class="tab" href="report.html">Report</a>
+</div></nav>
+
+<main>
+  <div class="hero">
+    <div class="eyebrow">비즈니스 인사이트</div>
+    <h1>같은 고객을 더 낮은 비용으로 —<br>카페 골목 4곳</h1>
+    <p class="lead">후보 15곳을 기대 주말 매출 × 임대료로 나누고, 1순위 상권의 고객 구성으로 운영 방식을 제안합니다.</p>
+  </div>
+
+  <section id="insights">
+    <h2><small>핵심 인사이트</small>다섯 가지 발견</h2>
+    <div class="grid g2">
+      <div class="card"><span class="tag">1</span><h4>사람이 많다고 카페가 잘 팔리지는 않는다</h4><p>주말 유동인구–카페 매출 상관 0.24. 유동인구가 비슷한 골목끼리도 매출이 약 100배 차이</p></div>
+      <div class="card"><span class="tag">2</span><h4>다음 분기는 관성, 1년 뒤는 상권 조건</h4><p>다음 분기는 지난 분기 그대로가 최선. 1년 뒤는 상권 조건을 더한 모델이 RMSLE −5.2%</p></div>
+      <div class="card"><span class="tag">3</span><h4>카페가 모인 골목일수록 점포당 매출도 높았다</h4><p>점포당 주말 매출 1.9배, 1년 뒤 예측 +25.3% — 잠식보다 집적에 가깝다 (상관관계)</p></div>
+      <div class="card"><span class="tag">4</span><h4>효율이 높아도 비싼 곳이 있다</h4><p>성수동 카페거리·홍대 일부는 임대료 때문에 ④칸. 서촌·망원·연남·송리단길이 ①칸</p></div>
+      <div class="card"><span class="tag">5</span><h4>고객은 같아도 사는 방식은 둘</h4><p>1순위 4곳 모두 20~30대·여성·주말 비중이 높지만, '머무는 골목'과 '지나가는 골목'으로 나뉜다</p></div>
+    </div>
+  </section>
+
+  <section id="quadrant">
+    <h2><small>후보 사분면</small>기대 주말 매출 × 임대료</h2>
+    <p class="sub">점선(경계)은 후보 11곳의 중앙값입니다. 슬라이더로 경계를 옮기면 칸과 순위가 다시 계산됩니다. 점에 마우스를 올리면 상세 값이 보입니다.</p>
+    <div class="ctrl">
+      <label>기대 매출 경계 <b id="sv"></b><input id="s" type="range"></label>
+      <label>임대료 경계 <b id="rv"></b><input id="r" type="range"></label>
+      <button id="reset" type="button">중앙값으로 되돌리기</button>
+    </div>
+    <figure><div id="quad" class="chart" role="img" aria-label="기대 주말 매출과 임대료 사분면"></div>
+      <figcaption>기대 주말 매출 = 2026년 예측 효율 × 2025년 주말 유동인구(분기 평균), 억 원/분기. 임대료 = 한국부동산원 소규모 상가 2025년 3분기~2026년 2분기 평균, 천원/㎡. 임대료 정보가 없는 4곳은 아래 표에 따로 표시.</figcaption></figure>
+    <div class="tbl-wrap"><table id="rank"></table></div>
+    <div class="callout warn"><b class="t">경계에 걸친 상권</b><p>송리단길은 기대 매출 4.61억으로 기본 경계와 같습니다. 경계를 조금만 올려도 ③칸으로 내려가므로, 순위는 '칸' 단위로 읽는 것을 권합니다.</p></div>
+  </section>
+
+  <section id="profile">
+    <h2><small>소비자 렌즈</small>상권별 카페·베이커리 고객 구성</h2>
+    <p class="sub">2025년 매출 구성을 서울 상권 1,107곳의 중앙값과 비교합니다. 연령·성별·시간대는 요일 구분 없는 매출, 주말 비중만 주말 매출 기준입니다.</p>
+    <div class="picker" id="picker"></div>
+    <div class="card">
+      <div class="detail-head"><h3 id="pname"></h3><span class="facts" id="pfacts"></span></div>
+      <div id="pchart" class="chart" style="min-height:420px" role="img" aria-label="선택한 상권의 고객 구성"></div>
+    </div>
+  </section>
+
+  <section id="plan">
+    <h2><small>실행 제안</small>1순위 4곳의 팝업 운영안</h2>
+    <div class="grid g2">
+      <div class="card"><span class="tag green">머무는 골목</span><h4>서촌 배화여대 · 연남</h4><p>지나가는 사람은 후보 중 적지만(32~34만 명) 1천 명당 매출이 높고(147~230만 원), 오후 비중 40%대, 객단가 1.4만 원대 → 머물면서 여러 개를 사는 손님이 많은 것으로 보인다</p></div>
+      <div class="card"><span class="tag">지나가는 골목</span><h4>망리단길 · 송리단길</h4><p>사람은 많지만(71~152만 명) 1천 명당 매출은 낮고(42~65만 원) 오후 비중도 낮다. 망리단길은 객단가가 낮고, 송리단길은 저녁 비중이 높다</p></div>
+    </div>
+    <div class="tbl-wrap"><table>
+      <tr><th>상권</th><th>목표</th><th>운영 시간</th><th>상품·경험 (제안)</th><th>근거</th></tr>
+      <tr><td><b>서촌 배화여대 일대</b></td><td>객단가·브랜드 경험</td><td>13~18시</td><td>디저트 페어링·선물 세트, 앉아서 머무는 공간</td><td>오후 40%, 객단가 1.42만 원, 여성 71%</td></tr>
+      <tr><td><b>연남</b></td><td>20대 신규 고객·SNS 확산</td><td>13~19시</td><td>한정 빵·포토존. 제과점 매출 11%라 차별화 메뉴 필요</td><td>20대 40%, 주말 45%, 객단가 1.48만 원</td></tr>
+      <tr><td><b>망리단길</b></td><td>인지도·시식</td><td>주말 낮 전체</td><td>테이크아웃 단품·시식, 쿠폰·앱 가입으로 재방문 연결</td><td>주말 유동 152만 명, 객단가 0.78만 원</td></tr>
+      <tr><td><b>송리단길</b></td><td>저녁 수요</td><td>15~21시</td><td>저녁 디저트·빵 테이크아웃</td><td>저녁 35%, 임대료 36.4 (후보 최저)</td></tr>
+    </table></div>
+    <div class="callout"><b class="t">마케터가 반복해서 쓰는 방법</b><p>① 분기 데이터가 나오면 1년 뒤 효율을 다시 예측하고 '같은 조건 대비 배수'로 후보를 뽑는다 → ② 임대료를 붙여 사분면으로 순위를 정한다 → ③ 1순위 상권의 고객 구성을 보고 '머무는 / 지나가는 골목'에 맞춰 운영안을 고른다.</p></div>
+    <div class="callout warn"><b class="t">한계</b><p>상권 단위 상관관계이며, 팝업을 열면 이만큼 팔린다는 예측이 아닙니다. 매출은 카드 기반 추정·명목 금액, 임대료는 넓은 지역 평균(대관료 아님), 기대 매출은 유동인구가 2025년과 같다는 가정 위의 값입니다.</p></div>
+  </section>
+</main>
+
+<footer>데이터 출처: 서울열린데이터광장 「서울시 상권분석서비스」, 한국부동산원 「상업용부동산 임대동향조사」. 상세: GitLab <code>reports/insight_report_draft.md</code>, <code>notebooks/3.0~3.1</code></footer>
+
+<script>
+const D = window.DASH;
+const C = D.candidates;
+const rented = C.filter(c => c.rent !== null);
+const median = a => { const s = [...a].sort((x, y) => x - y), m = s.length >> 1; return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2; };
+const S0 = median(rented.map(c => c.sales)), R0 = median(rented.map(c => c.rent));
+const QN = ["① 매출↑ 임대료↓", "② 매출↑ 임대료↑", "③ 매출↓ 임대료↓", "④ 매출↓ 임대료↑"];
+const QC = ["#2e7d32", "#4c78a8", "#f58518", "#9e9e9e"];
+// 점이 몰린 곳(홍대 일대 임대료 같음)은 라벨 위치를 직접 지정
+const POS = { "홍대땡땡거리": "top left", "성산중학교": "top center", "성신여대입구역 4번": "bottom right" };
+const FONT = { family: "Pretendard Variable, sans-serif", size: 13 };
+const won = v => (v / 10000).toFixed(v >= 100000 ? 0 : 1) + "만";
+
+const sEl = document.getElementById("s"), rEl = document.getElementById("r");
+const sv = document.getElementById("sv"), rv = document.getElementById("rv");
+Object.assign(sEl, { min: Math.min(...rented.map(c => c.sales)) - 0.1, max: Math.max(...rented.map(c => c.sales)) + 0.1, step: 0.01, value: S0 });
+Object.assign(rEl, { min: Math.min(...rented.map(c => c.rent)) - 1, max: Math.max(...rented.map(c => c.rent)) + 1, step: 0.1, value: R0 });
+
+function quadOf(c, S, R) { return (c.sales >= S ? 0 : 2) + (c.rent < R ? 0 : 1); }
+
+function render() {
+  const S = +sEl.value, R = +rEl.value;
+  sv.textContent = S.toFixed(2) + "억"; rv.textContent = R.toFixed(1) + "천원/㎡";
+  const ranked = rented.map(c => ({ ...c, q: quadOf(c, S, R) }))
+    .sort((a, b) => a.q - b.q || b.sales - a.sales);
+  ranked.forEach((c, i) => c.r = i + 1);
+
+  const traces = QN.map((name, qi) => {
+    const g = ranked.filter(c => c.q === qi);
+    return {
+      x: g.map(c => c.sales), y: g.map(c => c.rent), name, mode: "markers+text", type: "scatter",
+      text: g.map(c => `${c.r}. ${c.short}`), textposition: g.map(c => POS[c.short] ?? "top right"), textfont: { size: 12 },
+      marker: { size: 14, color: QC[qi], line: { color: "#fff", width: 1.5 } },
+      customdata: g.map(c => [c.name, c.type, c.rebArea, (c.eff2026 / 10000).toFixed(0), c.lift, (c.flow / 10000).toFixed(0)]),
+      hovertemplate: "<b>%{customdata[0]}</b> (%{customdata[1]})<br>기대 주말 매출 %{x:.2f}억/분기<br>임대료 %{y:.1f}천원/㎡ (부동산원 %{customdata[2]})"
+        + "<br>2026 예측 효율 %{customdata[3]}만 원/1천 명<br>같은 조건 대비 %{customdata[4]}배<br>주말 유동 %{customdata[5]}만 명/분기<extra></extra>",
+    };
+  });
+  Plotly.react("quad", traces, {
+    margin: { t: 20, r: 20, b: 55, l: 60 }, font: FONT,
+    xaxis: { title: "기대 주말 카페·베이커리 매출 (억 원/분기)", gridcolor: "#eee", zeroline: false, range: [Math.min(...rented.map(c => c.sales)) - 0.6, Math.max(...rented.map(c => c.sales)) + 1.1] },
+    yaxis: { title: "임대료 (천원/㎡)", gridcolor: "#eee", zeroline: false },
+    shapes: [
+      { type: "line", x0: S, x1: S, yref: "paper", y0: 0, y1: 1, line: { dash: "dot", color: "#888" } },
+      { type: "line", y0: R, y1: R, xref: "paper", x0: 0, x1: 1, line: { dash: "dot", color: "#888" } },
+    ],
+    legend: { orientation: "h", y: -0.2 }, paper_bgcolor: "rgba(0,0,0,0)", plot_bgcolor: "rgba(0,0,0,0)",
+  }, { displayModeBar: false, responsive: true });
+
+  const none = C.filter(c => c.rent === null).sort((a, b) => b.sales - a.sales);
+  document.getElementById("rank").innerHTML =
+    "<tr><th class='n'>순위</th><th>칸</th><th>상권</th><th>부동산원 상권</th><th class='n'>기대 매출(억)</th><th class='n'>임대료</th><th class='n'>같은 조건 대비</th></tr>"
+    + ranked.map(c => `<tr${c.q === 0 ? " class='hl'" : ""}><td class='n'>${c.r}</td><td class='q${c.q + 1}'>${QN[c.q]}</td><td>${c.name}</td><td>${c.rebArea}</td><td class='n'>${c.sales.toFixed(2)}</td><td class='n'>${c.rent.toFixed(1)}</td><td class='n'>${c.lift.toFixed(1)}배</td></tr>`).join("")
+    + none.map(c => `<tr><td class='n'>-</td><td>임대료 정보 없음</td><td>${c.name}</td><td>${c.gu} ${c.dong} · 현장 확인 필요</td><td class='n'>${c.sales.toFixed(2)}</td><td class='n'>-</td><td class='n'>${c.lift.toFixed(1)}배</td></tr>`).join("");
+}
+[sEl, rEl].forEach(el => el.addEventListener("input", render));
+document.getElementById("reset").onclick = () => { sEl.value = S0; rEl.value = R0; render(); };
+render();
+
+// 소비자 렌즈
+const PM = D.metrics.filter(m => m !== "객단가(원)");
+const order = [...C].sort((a, b) => (a.rank ?? 99) - (b.rank ?? 99));
+const picker = document.getElementById("picker");
+function showProfile(c) {
+  [...picker.children].forEach(b => b.classList.toggle("on", b.dataset.n === c.name));
+  document.getElementById("pname").textContent = c.name;
+  document.getElementById("pfacts").textContent =
+    `${c.quad} · 객단가 ${(c.profile["객단가(원)"] / 10000).toFixed(2)}만 원 (서울 ${(D.seoulMedian["객단가(원)"] / 10000).toFixed(2)}만) · 주말 유동 ${(c.flow / 10000).toFixed(0)}만 명/분기 · 임대료 ${c.rent ?? "정보 없음"}`;
+  const lab = PM.map(m => m.replace(" 비중", ""));
+  Plotly.react("pchart", [
+    { y: lab, x: PM.map(m => D.seoulMedian[m] * 100), name: "서울 상권 중앙값", type: "bar", orientation: "h", marker: { color: "#d9cfc3" },
+      hovertemplate: "%{y}: %{x:.1f}%<extra>서울 중앙값</extra>" },
+    { y: lab, x: PM.map(m => c.profile[m] * 100), name: c.short, type: "bar", orientation: "h", marker: { color: "#8a5a2b" },
+      text: PM.map(m => (c.profile[m] * 100).toFixed(0) + "%"), textposition: "outside",
+      hovertemplate: "%{y}: %{x:.1f}%<extra>" + c.short + "</extra>" },
+  ], {
+    barmode: "group", margin: { t: 10, r: 40, b: 40, l: 140 }, font: FONT,
+    xaxis: { title: "매출 비중 (%)", gridcolor: "#eee", range: [0, 85] },
+    yaxis: { autorange: "reversed" }, legend: { orientation: "h", y: -0.15 },
+    paper_bgcolor: "rgba(0,0,0,0)", plot_bgcolor: "rgba(0,0,0,0)",
+  }, { displayModeBar: false, responsive: true });
+}
+order.forEach(c => {
+  const b = document.createElement("button");
+  b.type = "button"; b.dataset.n = c.name; b.textContent = (c.rank ? c.rank + ". " : "") + c.short;
+  b.onclick = () => showProfile(c);
+  picker.appendChild(b);
+});
+showProfile(order[0]);
+</script>
+</body>
+</html>

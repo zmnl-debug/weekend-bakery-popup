@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Modeling · 주말 베이커리 카페 팝업 입지</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="assets/style.css">
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+</head>
+<body>
+<nav class="nav"><div class="nav-in">
+  <a class="logo" href="index.html">Weekend <span>Bakery</span> Popup</a>
+  <a class="tab" href="index.html">Overview</a>
+  <a class="tab" href="eda.html">EDA</a>
+  <a class="tab on" href="modeling.html">Modeling</a>
+  <a class="tab" href="insight.html">Insight</a>
+  <a class="tab" href="report.html">Report</a>
+</div></nav>
+
+<main>
+  <div class="hero">
+    <div class="eyebrow">모델링</div>
+    <h1>다음 분기는 관성,<br>1년 뒤는 상권 조건이 갈랐다</h1>
+    <p class="lead">1년 뒤 주말 효율을 예측하는 회귀 모델을 기준선과 비교하고, 어떤 상권 조건이 예측을 움직이는지 확인했습니다.</p>
+  </div>
+
+  <section id="target">
+    <h2><small>1. 문제 정의</small>맞힐 값과 검증 설계</h2>
+    <div class="tbl-wrap"><table>
+      <tr><th>항목</th><th>내용</th></tr>
+      <tr><td>타겟</td><td>log(1 + t+4분기 주말 카페·베이커리 매출 ÷ (t+4분기 토·일 유동인구 ÷ 1,000))</td></tr>
+      <tr><td>행 단위</td><td>상권 × 분기</td></tr>
+      <tr><td>예측 시점</td><td>t분기까지 아는 값으로 t+4분기(내년 같은 분기) 예측 — 미래 정보는 피처 금지</td></tr>
+      <tr><td>분할</td><td>타겟 분기 2021~2024 학습 / <b>2025 검증</b> (시간 순, 튜닝 없음)</td></tr>
+      <tr><td>지표</td><td><b>RMSLE</b>(효율이 크게 치우쳐 '몇 배 틀렸나'를 봄), MAE(log), MAE(원) 보조</td></tr>
+    </table></div>
+  </section>
+
+  <section id="compare">
+    <h2><small>2. 기준선과 모델 비교</small>1년 뒤에서만 상권 조건이 기준선을 이겼다 (RMSLE 기준)</h2>
+    <p class="sub">막대에 마우스를 올리면 값이 보입니다. 낮을수록 좋습니다. 검증 2025년, 다음 분기 4,290행 · 1년 뒤 4,229행.</p>
+    <figure><div id="rmsle" class="chart" role="img" aria-label="모델별 RMSLE 비교"></div></figure>
+    <div class="tbl-wrap"><table>
+      <tr><th>방법</th><th class="n">다음 분기 RMSLE</th><th class="n">1년 뒤 RMSLE</th><th class="n">1년 뒤 MAE(log)</th><th class="n">1년 뒤 MAE(원)</th></tr>
+      <tr><td>B1 지난 값 그대로</td><td class="n best">0.670</td><td class="n">0.939</td><td class="n best">0.407</td><td class="n best">22.0만</td></tr>
+      <tr><td>B3 뻔한 요인 (유형·유동인구·역·대학)</td><td class="n">1.887</td><td class="n">1.844</td><td class="n">1.267</td><td class="n">88.8만</td></tr>
+      <tr><td>M2 과거 효율 3개</td><td class="n">0.667</td><td class="n">0.918</td><td class="n">0.432</td><td class="n">28.6만</td></tr>
+      <tr class="hl"><td>M3 과거 효율 + 상권 조건</td><td class="n">0.676</td><td class="n best">0.890</td><td class="n">0.436</td><td class="n">29.7만</td></tr>
+      <tr><td>M4 상권 조건만</td><td class="n">1.356</td><td class="n">1.356</td><td class="n">0.825</td><td class="n">51.3만</td></tr>
+    </table></div>
+    <div class="grid g2">
+      <div class="callout"><b class="t">다음 분기 = 관성</b><p>지난 분기 그대로(B1)를 어떤 모델도 의미 있게 이기지 못했다. 상권 조건을 더하면 오히려 RMSLE가 1.4% 나빠졌다(0.667 → 0.676).</p></div>
+      <div class="callout"><b class="t">1년 뒤 = 상권 조건</b><p>M3가 B1 대비 RMSLE −5.2%(0.939 → 0.890), 과거 효율만 쓴 M2 대비 −3.1%. 그래서 메인 타겟을 1년 뒤로 정했다.</p></div>
+    </div>
+    <div class="callout warn"><b class="t">한계 — MAE는 기준선이 더 좋다</b><p>M3는 크게 틀리는 경우를 줄였지만 평균 오차는 B1보다 크다(22.0만 → 29.7만 원). 그래서 M3를 상권별 효율 '값'이 아니라 <b>후보 순위를 고르는 용도</b>로만 쓴다.</p></div>
+  </section>
+
+  <section id="factors">
+    <h2><small>3. 무엇이 1년 뒤 효율을 움직이나</small>카페가 모인 상권은 1년 뒤도 높다</h2>
+    <figure><img src="assets/fig/14_m3_1year_permutation_importance.png" alt="변수 중요도" loading="lazy"><figcaption>검증 세트 permutation 중요도. 과거 효율이 압도적이고, 그다음 직장인구 · 주말 유동인구 · 상주인구 · 프랜차이즈 비중</figcaption></figure>
+    <p class="sub">다른 조건을 그대로 두고 한 변수만 하위 10% → 상위 10% 값으로 바꿀 때의 예측 변화(부분 의존도)와 선형회귀 부호가 <b>같은 방향인 것만</b> 결론에 씁니다.</p>
+    <figure><img src="assets/fig/15_m3_1year_partial_dependence.png" alt="부분 의존도" loading="lazy"><figcaption>부분 의존도 (학습 2021~2024)</figcaption></figure>
+    <div class="tbl-wrap"><table>
+      <tr><th>변수</th><th class="n">1년 뒤 효율 예측 변화</th><th>해석</th></tr>
+      <tr class="hl"><td>카페·베이커리 점포 수 (5 → 54개)</td><td class="n best">+25.3%</td><td>과거 효율이 같아도 카페가 모인 상권이 1년 뒤 더 높다 (EDA 가설 3과 같은 방향)</td></tr>
+      <tr><td>프랜차이즈 비중 (0 → 0.45)</td><td class="n">+8.8%</td><td>브랜드가 검증한 수요가 있는 상권일 수 있음 (가설)</td></tr>
+      <tr><td>직장인구 (159 → 8,337명)</td><td class="n">+5.3%</td><td>평일 수요 기반이 주말에도 연결되는 것으로 보임 (가설)</td></tr>
+      <tr><td>집객시설 수 (5 → 60개)</td><td class="n">−5.8%</td><td>효율 수준과는 +였지만 과거 수준을 통제하면 − (이미 높아 더 오르기 어려움, 가설)</td></tr>
+      <tr><td>지하철역 (0 → 1개)</td><td class="n">−3.9%</td><td>위와 같은 해석 (가설)</td></tr>
+      <tr><td>주말 유동인구, 상주인구</td><td class="n">—</td><td>두 방법의 방향 불일치 → 해석 보류</td></tr>
+    </table></div>
+    <div class="callout warn"><b class="t">트러블슈팅 — 부분 의존도가 0으로 나옴</b><p>기본 계산 방식(recursion)이 범주형 변수가 있는 이 모델에서 일부 변수를 0으로 잘못 계산했다. 예측을 직접 다시 계산하는 방식(brute)으로 바꾸고 선형회귀 부호와 교차 확인했다.</p></div>
+  </section>
+
+  <section id="use">
+    <h2><small>4. 모델 활용</small>뻔한 답을 피해 후보 고르기</h2>
+    <p class="sub">검증을 마친 M3를 2021~2025 전체로 다시 학습해 2026년 효율을 예측했습니다. 예측 효율 순으로만 고르면 상위 15곳이 모두 발달상권·관광특구라, <b>뻔한 조건(B3)으로 기대되는 효율 대비 몇 배인가</b>로 후보 15곳을 골랐습니다(골목 14 · 전통시장 1). 15곳의 연도별 효율 백분위는 2021~2025년 내내 57~94로, 한 해만 튄 상권이 아닙니다.</p>
+    <p><a href="insight.html">→ 후보 사분면과 운영안 보기</a></p>
+  </section>
+</main>
+
+<footer>상세: GitLab <code>reports/modeling_report_draft.md</code>, <code>notebooks/2.0~3.0</code>. 모든 결과는 상관관계이며 인과가 아닙니다.</footer>
+
+<script>
+const names = ["B1 지난 값 그대로", "B3 뻔한 요인", "M2 과거 효율", "M3 과거 + 조건", "M4 조건만"];
+const next = [0.670, 1.887, 0.667, 0.676, 1.356];
+const year = [0.939, 1.844, 0.918, 0.890, 1.356];
+Plotly.newPlot("rmsle", [
+  { x: names, y: next, name: "다음 분기 (t+1)", type: "bar", marker: { color: "#c9b49b" },
+    hovertemplate: "%{x}<br>다음 분기 RMSLE %{y:.3f}<extra></extra>" },
+  { x: names, y: year, name: "1년 뒤 (t+4)", type: "bar",
+    marker: { color: names.map(n => n.startsWith("M3") ? "#2e7d32" : "#8a5a2b") },
+    hovertemplate: "%{x}<br>1년 뒤 RMSLE %{y:.3f}<extra></extra>" },
+], {
+  barmode: "group", margin: { t: 20, r: 10, b: 60, l: 50 },
+  yaxis: { title: "RMSLE (낮을수록 좋음)", gridcolor: "#eee" },
+  legend: { orientation: "h", y: 1.1 },
+  font: { family: "Pretendard Variable, sans-serif", size: 13 },
+  paper_bgcolor: "rgba(0,0,0,0)", plot_bgcolor: "rgba(0,0,0,0)",
+}, { displayModeBar: false, responsive: true });
+</script>
+</body>
+</html>
