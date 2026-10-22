@@ -1,0 +1,1093 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>전체 리포트 · 주말 베이커리 카페 팝업 입지</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+  .doc { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 36px; padding-top: 36px; }
+  .toc { position: sticky; top: 76px; align-self: start; font-size: 14px; border-left: 2px solid var(--line); padding-left: 14px; max-height: calc(100vh - 100px); overflow: auto; }
+  .toc b { display: block; margin-bottom: 8px; color: var(--ink-2); }
+  .toc a { display: block; color: var(--ink-2); text-decoration: none; padding: 4px 0; line-height: 1.4; }
+  .toc a:hover { color: var(--brand); }
+  .toc .part { font-weight: 700; color: var(--brand); margin-top: 10px; }
+  article h1 { font-size: clamp(28px, 4vw, 38px); margin: 0 0 10px; letter-spacing: -0.02em; }
+  article h2 { font-size: 23px; margin: 44px 0 10px; padding-top: 16px; border-top: 1px solid var(--line); }
+  article h3 { font-size: 18px; margin: 26px 0 8px; }
+  article p, article li { color: var(--ink); }
+  article img { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 10px; margin: 14px 0; }
+  article blockquote { margin: 16px 0; padding: 12px 18px; background: var(--brand-soft); border-left: 4px solid var(--brand); border-radius: 10px; }
+  article blockquote p { margin: 0; }
+  article code { background: #f1ebe3; padding: 1px 5px; border-radius: 4px; font-size: 0.9em; }
+  article pre { background: #f1ebe3; padding: 12px 14px; border-radius: 10px; overflow-x: auto; }
+  article hr { border: 0; border-top: 1px solid var(--line); margin: 28px 0; }
+  .docbar { display: flex; flex-wrap: wrap; gap: 10px; margin: 14px 0 6px; }
+  .docbar a, .docbar button { border: 1px solid var(--line); background: var(--surface); border-radius: 99px; padding: 6px 14px; font: inherit; font-size: 14px; color: var(--ink-2); text-decoration: none; cursor: pointer; }
+  .docbar a.on { background: var(--brand); color: #fff; border-color: var(--brand); }
+  .part-head { margin: 64px 0 0; padding: 18px 22px; background: var(--brand-soft); border-radius: 14px; font-size: 15px; color: var(--brand); font-weight: 700; }
+  @media (max-width: 860px) { .doc { grid-template-columns: 1fr; } .toc { position: static; max-height: none; } }
+  @media print { .nav, .toc, .docbar, footer { display: none; } .doc { display: block; } body { background: #fff; } }
+</style>
+</head>
+<body>
+<nav class="nav"><div class="nav-in">
+  <a class="logo" href="../index.html">Weekend <span>Bakery</span> Popup</a>
+  <a class="tab" href="../index.html">Overview</a>
+  <a class="tab" href="../eda.html">EDA</a>
+  <a class="tab" href="../modeling.html">Modeling</a>
+  <a class="tab" href="../insight.html">Insight</a>
+  <a class="tab on" href="../report.html">Report</a>
+</div></nav>
+<main>
+  <div class="docbar">
+    <a href="full_report.html" class="on">전체 리포트</a>
+    <a href="eda_report.html">EDA 리포트</a>
+    <a href="modeling_report.html">모델링 결과 보고서</a>
+    <a href="insight_report.html">인사이트 리포트</a>
+    
+    <button type="button" onclick="window.print()">인쇄 / PDF 저장</button>
+  </div>
+  <div class="doc">
+    <aside class="toc"><b>목차</b><div class="part">EDA 리포트</div><a href="#eda-1" style="padding-left:0px">1. 데이터 개요</a><a href="#eda-2" style="padding-left:0px">2. 데이터 결합과 전처리</a><a href="#eda-6" style="padding-left:0px">3. 분포</a><a href="#eda-13" style="padding-left:0px">4. 변수 사이의 관계 (가설 확인)</a><a href="#eda-18" style="padding-left:0px">5. EDA에서 모델링으로</a><a href="#eda-19" style="padding-left:0px">6. 한계와 편향</a><a href="#eda-20" style="padding-left:0px">데이터 출처</a><div class="part">모델링 결과 보고서</div><a href="#modeling-1" style="padding-left:0px">1. 문제 정의</a><a href="#modeling-2" style="padding-left:0px">2. 평가 지표와 검증 설계</a><a href="#modeling-3" style="padding-left:0px">3. 기준선과 모델 비교</a><a href="#modeling-4" style="padding-left:0px">4. 어떤 요인이 1년 뒤 효율을 움직이나</a><a href="#modeling-5" style="padding-left:0px">5. 모델 활용: 팝업 후보 고르기 (notebooks/3.0)</a><a href="#modeling-6" style="padding-left:0px">6. 한계와 개선 방향</a><div class="part">인사이트 리포트</div><a href="#insight-1" style="padding-left:0px">한 줄 결론</a><a href="#insight-2" style="padding-left:0px">인사이트 1. 사람이 많이 지나간다고 카페가 잘 팔리는 곳은 아니다</a><a href="#insight-3" style="padding-left:0px">인사이트 2. 다음 분기는 '지난 분기 그대로', 1년 뒤는 '상권 조건'이 갈린다</a><a href="#insight-4" style="padding-left:0px">인사이트 3. 카페가 모인 골목일수록 점포당 매출도 높았다 — 잠식보다 집적에 가깝다</a><a href="#insight-5" style="padding-left:0px">인사이트 4. 효율이 높아도 비싼 곳이 있다 — 비용까지 보면 순위가 바뀐다</a><a href="#insight-6" style="padding-left:0px">인사이트 5. 1순위 4곳의 손님은 20~30대 여성, 주말 — 그러나 사는 방식이 둘로 나뉜다</a><a href="#insight-7" style="padding-left:0px">인사이트 6. 실제 지도와 검색으로 보면 — 1순위 중 서촌은 빵집 경쟁이 덜하고 검색 관심 비중이 커지고 있다</a><a href="#insight-8" style="padding-left:0px">인사이트 7. 실무로 옮기면 — 언제, 얼마를 걸고, 무엇을 목표로</a><a href="#insight-9" style="padding-left:0px">실행 제안 — 상권별 팝업 운영안 (제안)</a><a href="#insight-10" style="padding-left:0px">한계와 다음 단계</a><a href="#insight-11" style="padding-left:0px">데이터 출처</a></aside>
+    <article><h1>주말 베이커리 카페 팝업, 어디에 열까? — 전체 리포트</h1><p>EDA 리포트 → 모델링 결과 보고서 → 인사이트 리포트를 한 페이지로 모았습니다. 각 리포트는 위 버튼에서 따로 보거나 PDF로 내려받을 수 있습니다.</p><div class="part-head" id="part-eda">PART · EDA 리포트</div><h1>EDA 리포트</h1>
+<p><strong>주제</strong> 주말 베이커리 카페 팝업스토어 어디에 열까? — 주말 유동인구 대비 카페·베이커리 매출 × 임대료로 고른 후보 상권<br />
+<strong>작성</strong> 이지민 · ABA3 1차 프로젝트 (유통) · 2026-10-21<br />
+<strong>대시보드</strong> https://zmnl-debug.github.io/weekend-bakery-popup/</p>
+<blockquote>
+<p>이 리포트는 데이터 개요, 전처리와 그 근거, 주요 변수의 분포와 관계를 정리한다. 숫자마다 계산 기준(분자·분모·단위·기간)은 <code>references/metric_definitions.md</code>, 가설별 판정 기록은 <code>references/hypothesis_log.md</code>에 있다.</p>
+</blockquote>
+<hr />
+<h2 id="eda-1">1. 데이터 개요</h2>
+<div class="tbl-wrap"><table>
+<thead>
+<tr>
+<th>항목</th>
+<th>내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>출처</td>
+<td>서울열린데이터광장 「서울시 상권분석서비스」 (서울특별시)</td>
+</tr>
+<tr>
+<td>사용 파일</td>
+<td>추정매출-상권(2021~2025 연도별), 길단위인구-상권, 직장인구-상권, 상주인구-상권, 점포-상권(2021~2025 연도별), 집객시설-상권, 상권변화지표-상권</td>
+</tr>
+<tr>
+<td>분석 단위 (행 하나)</td>
+<td><strong>한 상권의 한 분기</strong> (<code>상권_코드</code> + <code>기준_년분기_코드</code>). 결합 테이블 21,972행 × 171열, 상권 1,211개</td>
+</tr>
+<tr>
+<td>기간</td>
+<td>2021년 1분기 ~ 2025년 4분기 (20개 분기, 매출·점포 기준)</td>
+</tr>
+<tr>
+<td>분석 업종</td>
+<td>카페·베이커리 = <code>커피-음료</code> + <code>제과점</code> 합산. 데이터에 '베이커리 카페'가 별도 업종으로 없어 두 업종 합산을 베이커리 카페 시장의 대리 지표로 쓴다</td>
+</tr>
+<tr>
+<td>매출의 성격</td>
+<td>카드 결제 기반 <strong>추정</strong> 매출, 물가 미반영(명목) 금액. 온라인 매출 미포함</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>사용한 데이터 도메인</strong> — 서울시 상권분석서비스 6개 도메인을 상권 × 분기로 결합하고, 외부 데이터 3개로 보완했다.</p>
+<div class="tbl-wrap"><table>
+<thead>
+<tr>
+<th>도메인</th>
+<th>파일 (출처)</th>
+<th>이 분석에서의 역할</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>매출</td>
+<td>추정매출-상권 (서울시)</td>
+<td>카페·베이커리 주말 매출 = 핵심 지표의 분자, 연령·성별·시간대 매출</td>
+</tr>
+<tr>
+<td>유동인구</td>
+<td>길단위인구-상권 (서울시)</td>
+<td>토·일 유동인구 = 핵심 지표의 분모</td>
+</tr>
+<tr>
+<td>직장·상주인구</td>
+<td>직장인구-상권, 상주인구-상권 (서울시)</td>
+<td>머무는 사람(가설 2)</td>
+</tr>
+<tr>
+<td>점포</td>
+<td>점포-상권 (서울시)</td>
+<td>카페·베이커리 점포 수, 프랜차이즈 비중(가설 3)</td>
+</tr>
+<tr>
+<td>집객시설</td>
+<td>집객시설-상권 (서울시)</td>
+<td>지하철역·대학교·시설 수</td>
+</tr>
+<tr>
+<td>상권 변화</td>
+<td>상권변화지표-상권 (서울시)</td>
+<td>확장·정체 등 상권 국면</td>
+</tr>
+<tr>
+<td>임대료</td>
+<td>한국부동산원 임대동향조사 (공공데이터포털)</td>
+<td>후보 순위 조정 (모델링·인사이트 단계)</td>
+</tr>
+<tr>
+<td>실제 장소</td>
+<td>카카오 로컬 API</td>
+<td>대리 지표 검증 (아래 6장)</td>
+</tr>
+<tr>
+<td>검색 관심</td>
+<td>네이버 데이터랩</td>
+<td>후보 관심도 (인사이트 단계)</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>주요 컬럼</strong></p>
+<div class="tbl-wrap"><table>
+<thead>
+<tr>
+<th>컬럼</th>
+<th>의미</th>
+<th>자료형</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>상권_코드</code>, <code>상권_코드_명</code>, <code>상권_구분_코드_명</code></td>
+<td>상권 식별자, 이름, 유형(골목·발달·전통시장·관광특구)</td>
+<td>정수 / 문자 / 범주</td>
+</tr>
+<tr>
+<td><code>기준_년분기_코드</code></td>
+<td>연도×10 + 분기 (예: 20254)</td>
+<td>정수 → 연도·분기로 분리</td>
+</tr>
+<tr>
+<td><code>주말_매출_금액</code></td>
+<td>분기 동안 토·일 카드 추정 매출 (원)</td>
+<td>정수</td>
+</tr>
+<tr>
+<td><code>토요일_유동인구_수</code>, <code>일요일_유동인구_수</code></td>
+<td>분기 동안 토·일 길단위 유동인구 (명)</td>
+<td>실수</td>
+</tr>
+<tr>
+<td><code>총_직장_인구_수</code>, <code>총_상주인구_수</code></td>
+<td>상권의 직장·상주인구 (명)</td>
+<td>실수</td>
+</tr>
+<tr>
+<td><code>유사_업종_점포_수</code>, <code>프랜차이즈_점포_수</code></td>
+<td>카페·베이커리 점포 수</td>
+<td>정수</td>
+</tr>
+<tr>
+<td><code>집객시설_수</code>, <code>지하철_역_수</code>, <code>대학교_수</code></td>
+<td>상권 안 집객시설</td>
+<td>실수 (빈칸 → 0)</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>핵심 지표 — 주말 유동인구 1천 명당 주말 카페·베이커리 매출 (원, 상권 × 분기)</strong></p>
+<pre><code>= 카페·베이커리 주말_매출_금액 ÷ ((토요일_유동인구_수 + 일요일_유동인구_수) ÷ 1,000)
+</code></pre>
+<p>매출에는 배달·동네 주민·법인카드 결제가 섞여 있어, 결제자가 지나간 사람인지 알 수 없다. 그래서 '전환율'이 아니라 <strong>유동인구 대비 매출 효율</strong>로 해석한다.</p>
+<hr />
+<h2 id="eda-2">2. 데이터 결합과 전처리</h2>
+<h3 id="eda-3">2-1. 결합</h3>
+<div class="tbl-wrap"><table>
+<thead>
+<tr>
+<th>단계</th>
+<th>결과</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>추정매출-상권 2021~2025 이어 붙이기</td>
+<td>439,141행 × 57열, 20개 분기 모두 존재, 결측·매출 0 이하 0건</td>
+</tr>
+<tr>
+<td>카페·베이커리만 골라 상권 × 분기로 합산</td>
+<td>21,972행 (두 업종 모두 있는 조합 8,363 / 한 업종만 13,609)</td>
+</tr>
+<tr>
+<td>인구·점포·시설·상권변화 파일 결합 (왼쪽 결합)</td>
+<td>파일별 미매칭 11~331행은 빈칸으로 유지 (신설 상권 등)</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>상권 수는 연도별 1,576~1,581개로 거의 같고, 1,560개 상권이 5년 내내 있다 → 시간 순 분할에 문제 없음</li>
+<li>업종 <code>고시원</code>은 2023년까지만 있어 전체 업종 분석에서 제외 (카페·베이커리 분석과는 무관)</li>
+</ul>
+<h3 id="eda-4">2-2. 전처리 규칙과 근거</h3>
+<div class="tbl-wrap"><table>
+<thead>
+<tr>
+<th>항목</th>
+<th>처리</th>
+<th>근거</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>파일 인코딩·열 이름</td>
+<td><code>cp949</code>로 읽고, 2025년 점포 파일의 영문 열 이름(<code>stdr_yyqu_cd</code> 등)을 한글 열 이름으로 맞춤</td>
+<td>그대로 이어 붙이면 같은 내용이 다른 열로 갈라짐</td>
+</tr>
+<tr>
+<td>분기 코드</td>
+<td><code>기준_년분기_코드</code>를 연도(<code>//10</code>)·분기(<code>%10</code>)로 분리</td>
+<td>20214 다음이 20221이라 그냥 정렬하면 순서가 어긋남</td>
+</tr>
+<tr>
+<td><strong>주말 유동인구가 너무 작은 행</strong></td>
+<td>주말 유동인구 하위 1%(8,666명 미만, 220행) 제외</td>
+<td>분모가 작아 지표가 폭발 — 예: 청계산원터골은 주말 유동인구 8~700명인데 1천 명당 매출이 최대 72억 원. 산·하천 주변에서 길단위 유동인구가 거의 잡히지 않는 데이터 한계로 판단</td>
+</tr>
+<tr>
+<td><strong>집객시설 세부 열 빈칸</strong></td>
+<td>0으로 채움 (집객시설 파일과 매칭된 행만)</td>
+<td>원본 파일에 0이 하나도 없고 빈칸만 있음 → 빈칸 = 시설 없음</td>
+</tr>
+<tr>
+<td>주말 매출 0원 (246행)</td>
+<td>유지, 로그는 log(1 + x)</td>
+<td>실제로 주말 매출이 없는 상권일 수 있음</td>
+</tr>
+<tr>
+<td><strong>카페 점포 수</strong></td>
+<td><code>유사_업종_점포_수</code> 사용</td>
+<td><code>유사_업종_점포_수</code> = <code>점포_수</code> + <code>프랜차이즈_점포_수</code> (전 행 일치). <code>점포_수</code>는 프랜차이즈를 뺀 값</td>
+</tr>
+<tr>
+<td><strong>연령대 비중의 분모</strong></td>
+<td>연령을 알 수 있는 매출 합계</td>
+<td>연령 미상 매출(법인카드 등) 비율이 업종마다 다름 (2024년 카페 12.9%, 한식 21.3%)</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="eda-5">2-3. 결측치·이상치·자료형 점검 (카페·베이커리 결합 테이블 21,972행)</h3>
+<div class="tbl-wrap"><table>
+<thead>
+<tr>
+<th>점검</th>
+<th>결과</th>
+<th>처리</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>매출 결측·음수</td>
+<td>0건 (추정매출 원본 439,141행 기준)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>유동인구 결측</td>
+<td>11행 (유동인구 파일에 없는 상권 × 분기)</td>
+<td>지표 계산 불가 → 분석에서 빠짐</td>
+</tr>
+<tr>
+<td>직장인구 / 상주인구 결측</td>
+<td>33행 / 104행</td>
+<td>빈칸 유지 (모델 HGB는 결측을 그대로 처리)</td>
+</tr>
+<tr>
+<td>집객시설 결측</td>
+<td>331행 (파일에 없는 상권)</td>
+<td>빈칸 유지. 파일에 있는 상권의 세부 빈칸은 0</td>
+</tr>
+<tr>
+<td>이상치 — 분모가 매우 작은 행</td>
+<td>주말 유동인구 하위 1% 220행, 지표 최대 72억 원</td>
+<td>제외 (위 2-2)</td>
+</tr>
+<tr>
+<td>이상치 — 주말 매출 0원</td>
+<td>246행</td>
+<td>실제 값으로 보고 유지</td>
+</tr>
+<tr>
+<td>치우친 분포</td>
+<td>지표·매출 모두 오른쪽으로 긴 꼬리 (3장)</td>
+<td>모델 타겟에 log(1+x)</td>
+</tr>
+<tr>
+<td>자료형</td>
+<td>분기 코드는 정수(20214 → 20221 순서 문제), 상권 유형·상권 변화는 문자</td>
+<td>연도·분기 분리, 범주형으로 변환</td>
+</tr>
+<tr>
+<td>중복</td>
+<td><code>상권_코드</code> + <code>기준_년분기_코드</code> 중복 0건 (노트북에서 assert로 확인)</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="eda-6">3. 분포</h2>
+<h3 id="eda-7">3-1. 전체 상권 × 업종 매출 — 오른쪽으로 크게 치우침</h3>
+<p><img alt="매출 분포" src="../assets/fig/01_sales_dist.png" /></p>
+<p>평균 10.2억 원, 중앙값 1.7억 원으로 평균이 중앙값의 6배다. 로그 눈금에서 1억 원 근처를 중심으로 종 모양이 되어, 이후 모델 타겟에는 로그를 씌운다.</p>
+<h3 id="eda-8">3-2. 상권 유형별 매출 — 상권 수와 매출 규모가 반대</h3>
+<p><img alt="상권 유형별 매출" src="../assets/fig/02_sales_by_type.png" /></p>
+<p>발달상권은 상권 수 16%로 매출 62%를, 골목상권은 상권 수 66%로 매출 18%를 차지한다. 상권당 중앙값은 관광특구 &gt; 발달 &gt; 전통시장 &gt; 골목 순이다.</p>
+<h3 id="eda-9">3-3. 업종별 매출 — 합계 순위와 업종당 매출이 다름</h3>
+<p><img alt="업종별 매출" src="../assets/fig/03_top15_industries.png" /></p>
+<p>일반의류는 합계 2위지만 중앙값 1.2억 원(매장이 많아서 합계가 큼), 의약품·일반의원은 중앙값 10억 원 이상(매장 하나가 큼)이다.</p>
+<h3 id="eda-10">3-4. 분기별 추이 — 4분기 계절성, 명목 기준 증가</h3>
+<p><img alt="분기별 추이" src="../assets/fig/04_quarterly_trend.png" /></p>
+<p>매년 4분기가 가장 높다. 2021년 1분기 19.5조 원 → 2025년 4분기 24.4조 원으로 <strong>명목 기준</strong> +25.6%이며, 물가가 반영되지 않아 실질 성장으로 단정하지 않는다.</p>
+<h3 id="eda-11">3-5. 핵심 지표(주말 효율) 분포 — 상권 간 차이가 큼</h3>
+<p><img alt="주말 지표 분포" src="../assets/fig/05_weekend_metric_hist.png" /></p>
+<p>상권 × 분기 21,741건(저유동 제외 후)에서 중앙값 약 24.6만 원, 상위 25% 경계가 하위 25% 경계의 약 15배다. 예를 들어 2025년 골목상권 중 1년간 주말 유동인구가 비슷한 마포FM(86만 명)과 수락산디자인거리(95만 명)의 1년간 주말 카페·베이커리 매출(4개 분기 합계)은 0.06억 원 vs 6.18억 원으로 약 100배 차이 난다.</p>
+<h3 id="eda-12">3-6. 상권 유형별 주말 효율 — 행 수 불균형 주의</h3>
+<p><img alt="상권 유형별 주말 효율" src="../assets/fig/07_metric_by_type_box.png" /></p>
+<p>중앙값(2025년, 상권 단위)은 관광특구 319만 원 · 발달 138만 원 · 전통시장 51만 원 · 골목 12만 원이다. 이 차이는 누구나 예상하는 <strong>기본 조건</strong>이라, 이후 분석은 상권 유형을 통제한 뒤 남는 차이를 본다.</p>
+<p>행 수는 골목상권 14,230(64.8%) · 발달상권 4,872(22.2%) · 전통시장 2,750(12.5%) · 관광특구 120(0.5%)으로 <strong>유형 간 불균형</strong>이 크다. 관광특구는 행이 적어 단독 결론을 내지 않고, 가설 확인은 같은 유형 안에서 비교한다. (회귀 문제라 클래스 불균형 대신 타겟의 치우침을 log 변환으로 다뤘다.)</p>
+<hr />
+<h2 id="eda-13">4. 변수 사이의 관계 (가설 확인)</h2>
+<blockquote>
+<p>아래는 모두 <strong>상관관계</strong>이며 인과가 아니다. 가설별 판정 과정은 <code>references/hypothesis_log.md</code> 참고.</p>
+</blockquote>
+<h3 id="eda-14">가설 1 — 주말 유동인구가 많다고 주말 효율이 높은 것은 아니다 → <strong>지지</strong></h3>
+<p><img alt="가설 1" src="../assets/fig/06_h1_foot_decile_box.png" /></p>
+<ul>
+<li>주말 유동인구와 주말 카페·베이커리 <strong>매출</strong>의 스피어만 상관은 0.24로 약하다 → 사람이 많이 지나간다고 매출이 비례해서 늘지 않는다</li>
+<li>유동인구가 많은 구간일수록 1천 명당 매출은 오히려 낮다(스피어만 −0.21; 골목 −0.29, 발달 −0.22, 전통시장 −0.22)</li>
+<li>단, 지표의 분모가 유동인구라 매출이 유동인구만큼 늘지 않으면 음의 관계가 수식상 생긴다 → "많을수록 나쁘다"가 아니라 <strong>"많다고 좋은 건 아니다"</strong>까지만 주장</li>
+</ul>
+<h3 id="eda-15">가설 2 — 머무는 사람이 많은 상권이 효율이 높다 → <strong>부분 지지</strong></h3>
+<p><img alt="가설 2" src="../assets/fig/08_h2_stay_metric_box.png" /></p>
+<p>상권 유형 × 주말 유동인구 5분위 그룹 안에서 비교했다.</p>
+<div class="tbl-wrap"><table>
+<thead>
+<tr>
+<th>변수 (원래 값)</th>
+<th>하 → 상 구간 중앙값</th>
+<th>그룹 안 스피어만</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>직장인구</td>
+<td>2.9배</td>
+<td>0.31</td>
+</tr>
+<tr>
+<td>집객시설 수</td>
+<td>3.2배</td>
+<td>0.35</td>
+</tr>
+<tr>
+<td>상주인구</td>
+<td>0.7배</td>
+<td>−0.04 (무관)</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p><strong>트러블슈팅</strong> — 처음엔 '직장인구 ÷ 주말 유동인구' 같은 비율로 봤는데, 지표와 분모가 같아 상관이 부풀려졌다(무작위 값을 유동인구로 나눠도 상관 0.15). 비율 대신 원래 값으로, 같은 유형·같은 유동인구 수준끼리 다시 비교했다(직장인구 0.55 → 0.31).</p>
+</blockquote>
+<h3 id="eda-16">가설 3 — 카페·베이커리가 몰린 상권은 손님을 나눠 먹기보다 더 끌어온다 → <strong>약하게 지지</strong></h3>
+<p><img alt="가설 3" src="../assets/fig/09_h3_density_metric_box.png" /></p>
+<p>점포가 많으면 합계 매출이 커지는 건 당연하므로, 타겟을 <strong>점포당 주말 매출</strong>로 바꿔 같은 그룹 안에서 비교했다. 점포 수 하 → 상 구간에서 점포당 주말 매출 중앙값이 1.9배(스피어만 0.26)로, 잠식보다는 집적 쪽이다. 프랜차이즈 비중(0.30)은 점포 수 분모를 공유해 부풀려졌을 수 있어 판정을 보류했다.</p>
+<h3 id="eda-17">참고 — 주말 유동인구 × 효율 2×2</h3>
+<p><img alt="2×2" src="../assets/fig/10_matrix_2x2_2025.png" /></p>
+<p>'유동인구 상 + 효율 상' 상위 30개 중 25개가 발달상권(잠실역·명동 등)이었다. 상권 유형이라는 기본 조건이 그대로 드러나, 후보 선정은 모델의 '기대 대비 효율'로 하기로 했다.</p>
+<hr />
+<h2 id="eda-18">5. EDA에서 모델링으로</h2>
+<ul>
+<li>효율은 분기 사이에 거의 변하지 않아, <strong>다음 분기</strong>는 "지난 분기 그대로"를 이기기 어려웠다(RMSLE 0.670 vs 상권 조건을 더한 모델 0.676).</li>
+<li><strong>1년 뒤</strong>를 예측하면 상권 조건을 더한 모델이 기준선 대비 오차를 5.2% 줄였다(0.938 → 0.890). → 메인 타겟을 1년 뒤 효율로 정했다 (모델링 보고서에서 상세).</li>
+<li>1년 뒤 모델에서 조건 변수의 방향(부분 의존도·선형회귀 부호가 일치한 것): 카페·베이커리 점포 수 <strong>+</strong>, 프랜차이즈 비중 <strong>+</strong>, 직장인구 <strong>+</strong>, 집객시설 수 <strong>−</strong>, 지하철역 수 <strong>−</strong> (<code>notebooks/2.3-feature-direction.ipynb</code>).</li>
+</ul>
+<hr />
+<h2 id="eda-19">6. 한계와 편향</h2>
+<ul>
+<li>매출·유동인구 모두 추정치이며 매출은 명목 금액이다.</li>
+<li>카페·베이커리 합산은 베이커리 카페의 대리 지표이고, 제과점에는 프랜차이즈 베이커리(생활형 구매)가 섞여 있다.</li>
+<li>검증(카카오 로컬, 상권 중심 반경 500m, 1,107곳): 카카오 '카페' 수와 커피 점포 수 상관 0.48, '베이커리'와 제과점 점포 수 0.39로 같은 방향(중간). '베이커리카페' 표방 장소는 상권당 중앙값 1곳, 제과점 점포 수와 0.23 (<code>notebooks/3.2</code>).</li>
+<li>분석 단위가 상권이라 결론은 상권 선택에만 쓴다(점포 하나의 결정으로 옮기지 않음).</li>
+<li>상관관계이며 인과가 아니다.</li>
+<li><strong>편향</strong>: ① 카드 결제 기반 추정이라 현금 결제와 온라인 주문이 빠진다. ② 연령 미상 매출(법인카드 등)이 있어 오피스 상권의 연령 구성이 덜 잡힌다. ③ 길단위 유동인구는 추정치라 산·하천 주변에서 낮게 잡혀, 저유동 제외로 외곽 상권이 분석에서 빠진다. ④ 업종 분류상 '베이커리 카페'가 없어 커피·제과점 합산으로 대신했다.</li>
+</ul>
+<h2 id="eda-20">데이터 출처</h2>
+<ul>
+<li>서울열린데이터광장 「서울시 상권분석서비스」 (서울특별시) — https://data.seoul.go.kr/dataList/3/literacyView.do</li>
+<li>(모델링·인사이트 단계 외부 데이터) 한국부동산원 「상업용부동산 임대동향조사」 소규모상가 임대료 (공공데이터포털), 네이버 데이터랩 검색어 트렌드</li>
+</ul><div class="part-head" id="part-modeling">PART · 모델링 결과 보고서</div><h1>모델링 결과 보고서</h1>
+<p><strong>주제</strong> 주말 베이커리 카페 팝업스토어 어디에 열까? — 주말 유동인구 대비 카페·베이커리 매출 × 임대료로 고른 후보 상권<br />
+<strong>작성</strong> 이지민 · ABA3 1차 프로젝트 (유통) · 2026-10-22<br />
+<strong>대시보드</strong> https://zmnl-debug.github.io/weekend-bakery-popup/</p>
+<blockquote>
+<p>계산 기준은 <code>references/metric_definitions.md</code>, 판정 과정은 <code>references/hypothesis_log.md</code>, 코드는 <code>notebooks/2.0</code>~<code>3.0</code>에 있다.</p>
+</blockquote>
+<hr />
+<h2 id="modeling-1">1. 문제 정의</h2>
+<div class="tbl-wrap"><table>
+<thead>
+<tr>
+<th>항목</th>
+<th>내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>누가</td>
+<td>베이커리 카페 브랜드 마케터</td>
+</tr>
+<tr>
+<td>상황</td>
+<td>다음 시즌 주말 팝업스토어 열 상권 탐색</td>
+</tr>
+<tr>
+<td>결정</td>
+<td>어느 상권에 열 것인가 (후보 순위)</td>
+</tr>
+<tr>
+<td>맞힐 값</td>
+<td><strong>1년 뒤(t+4, 내년 같은 분기) 주말 유동인구 1천 명당 주말 카페·베이커리 매출</strong> (원, log(1+x))</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>지금 분기의 효율은 조회하면 바로 나오는 값이라 맞혀도 결정이 바뀌지 않는다. 팝업을 열 시점(미래)의 값을 맞혀야 의미가 있다.</li>
+<li>처음엔 다음 분기(t+1)를 맞히려 했으나, '지난 분기 그대로'를 어떤 모델도 이기지 못해 1년 뒤로 바꿨다 (3장).</li>
+</ul>
+<div class="tbl-wrap"><table>
+<thead>
+<tr>
+<th>타겟 정의</th>
+<th>내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>계산식</td>
+<td>log(1 + t+4분기 카페·베이커리 <code>주말_매출_금액</code> ÷ ((t+4분기 <code>토요일_유동인구_수</code> + <code>일요일_유동인구_수</code>) ÷ 1,000))</td>
+</tr>
+<tr>
+<td>행 단위</td>
+<td>상권 × 분기 (<code>상권_코드</code> + <code>기준_년분기_코드</code>)</td>
+</tr>
+<tr>
+<td>예측 시점</td>
+<td>t분기까지 아는 값으로 t+4분기를 예측. t+1분기 이후 정보는 피처 금지</td>
+</tr>
+<tr>
+<td>문제 유형</td>
+<td>회귀</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="modeling-2">2. 평가 지표와 검증 설계</h2>
+<div class="tbl-wrap"><table>
+<thead>
+<tr>
+<th>지표</th>
+<th>고른 이유</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>RMSLE</strong> (주 지표, log 척도 RMSE)</td>
+<td>효율은 오른쪽으로 크게 치우쳐 있다(상권 × 분기 기준 상위 25% 경계가 하위 25% 경계의 약 15배). log 척도라 '몇 배 틀렸나'를 보고, 큰 오차에 더 큰 벌점을 준다</td>
+</tr>
+<tr>
+<td>MAE(log)</td>
+<td>평균적인 상대 오차 — 큰 오차 몇 개에 덜 흔들린다</td>
+</tr>
+<tr>
+<td>MAE(원)</td>
+<td>원 단위 평균 오차 — 실무자가 읽기 쉬운 크기</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li><strong>시간 순 분할</strong>: 타겟 분기 2021~2024 학습 / <strong>2025 검증</strong>. 2025는 학습·튜닝에 쓰지 않았다(하이퍼파라미터 기본값, <code>random_state=42</code>).</li>
+<li><strong>누수 방지</strong>: 피처는 모두 t분기 이전 값. 1년 뒤 모델의 '타겟 분기 번호' 피처는 t+4의 분기 번호(= t와 같은 분기)라 미래 정보가 아니다.</li>
+<li>비교는 같은 검증 행(다음 분기 4,290행, 1년 뒤 4,229행)에서 했다.</li>
+</ul>
+<h2 id="modeling-3">3. 기준선과 모델 비교</h2>
+<div class="tbl-wrap"><table>
+<thead>
+<tr>
+<th>이름</th>
+<th>내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>B1</td>
+<td>t분기 효율 그대로 (1년 뒤 입장에서는 '작년 같은 분기' 값)</td>
+</tr>
+<tr>
+<td>B3</td>
+<td>뻔한 요인 선형회귀: 상권 유형 · 주말 유동인구 · 지하철역 · 대학교 · 분기</td>
+</tr>
+<tr>
+<td>M2</td>
+<td>HGB, 과거 효율 3개(t, t−1, t−3분기)</td>
+</tr>
+<tr>
+<td>M3</td>
+<td>HGB, 과거 효율 + 상권 조건 11개(직장·상주인구, 집객시설, 점포 수, 프랜차이즈 비중, 상권 변화 지표 등)</td>
+</tr>
+<tr>
+<td>M4</td>
+<td>HGB, 상권 조건만</td>
+</tr>
+</tbody>
+</table></div>
+<p><img alt="다음 분기 vs 1년 뒤 RMSLE" src="../assets/fig/13_rmsle_next_vs_1year.png" /></p>
+<div class="tbl-wrap"><table>
+<thead>
+<tr>
+<th>방법</th>
+<th>다음 분기 RMSLE</th>
+<th>1년 뒤 RMSLE</th>
+<th>1년 뒤 MAE(log)</th>
+<th>1년 뒤 MAE(원)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>B1 그대로</td>
+<td><strong>0.670</strong></td>
+<td>0.939</td>
+<td><strong>0.407</strong></td>
+<td><strong>22.0만</strong></td>
+</tr>
+<tr>
+<td>B3 뻔한 요인</td>
+<td>1.887</td>
+<td>1.844</td>
+<td>1.267</td>
+<td>88.8만</td>
+</tr>
+<tr>
+<td>M2 과거 효율</td>
+<td>0.667</td>
+<td>0.918</td>
+<td>0.432</td>
+<td>28.6만</td>
+</tr>
+<tr>
+<td>M3 과거 + 조건</td>
+<td>0.676</td>
+<td><strong>0.890</strong></td>
+<td>0.436</td>
+<td>29.7만</td>
+</tr>
+<tr>
+<td>M4 조건만</td>
+<td>1.356</td>
+<td>1.356</td>
+<td>0.825</td>
+<td>51.3만</td>
+</tr>
+</tbody>
+</table></div>
+<p>검증 2025년, 다음 분기 4,290행 · 1년 뒤 4,229행. 다음 분기에는 B2(작년 같은 분기 값)도 비교했다(RMSLE 0.928, B2가 있는 4,219행, <code>notebooks/2.1</code>). 1년 뒤에서는 B2가 B1과 같은 값이라 B1로 통합했다.</p>
+<p><strong>읽는 법</strong><br />
+1. <strong>다음 분기는 관성이 전부다.</strong> 지난 분기 그대로(B1)를 어떤 모델도 의미 있게 이기지 못했다. 상권 조건을 더하면 오히려 RMSLE가 1.4% 나빠졌다(M2 0.667 → M3 0.676).<br />
+2. <strong>1년 뒤에는 상권 조건이 쓸모 있다(RMSLE 기준).</strong> M3가 B1 대비 −5.2%(0.939 → 0.890), 과거 효율만 쓴 M2 대비 −3.1%.<br />
+3. <strong>단, MAE는 B1이 가장 좋다.</strong> M3는 크게 틀리는 경우(RMSLE가 민감한 쪽)를 줄였지만, 평균적인 오차는 B1보다 크다(MAE(원) 22.0만 → 29.7만 원). 즉 M3는 '상권별 효율 값을 정확히 맞히는 모델'이 아니라 <strong>크게 변할 상권을 덜 놓치는, 순위를 고르는 데 쓰는 모델</strong>로 해석한다.<br />
+4. 상권 조건만 쓴 M4와 뻔한 요인 B3는 B1보다 훨씬 나쁘다 → 과거 효율 없이 조건만으로는 효율 수준을 맞힐 수 없다.</p>
+<h2 id="modeling-4">4. 어떤 요인이 1년 뒤 효율을 움직이나</h2>
+<p><img alt="1년 뒤 M3 중요도" src="../assets/fig/14_m3_1year_permutation_importance.png" /></p>
+<ul>
+<li>중요도(검증 세트 permutation, RMSLE 증가량): 과거 효율(t분기) 1.60 ≫ t−1분기 효율 0.087 &gt; t−3분기 효율 0.067 &gt; 직장인구 0.038 &gt; 주말 유동인구 0.036 &gt; 상주인구 0.032 &gt; 프랜차이즈 비중 0.018.</li>
+<li>방향(<code>notebooks/2.3</code>): 다른 조건을 그대로 두고 한 변수만 하위 10% → 상위 10% 값으로 바꿀 때의 예측 변화(부분 의존도)와 선형회귀 부호가 <strong>같은 방향인 것만</strong> 결론에 쓴다.</li>
+</ul>
+<p><img alt="부분 의존도" src="../assets/fig/15_m3_1year_partial_dependence.png" /></p>
+<div class="tbl-wrap"><table>
+<thead>
+<tr>
+<th>변수</th>
+<th>1년 뒤 효율 예측 변화</th>
+<th>해석</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>카페·베이커리 점포 수 (5 → 54개)</td>
+<td><strong>+25.3%</strong></td>
+<td>카페가 모인 상권은 과거 효율이 같아도 1년 뒤가 더 높다 (EDA 가설 3 '집적'과 같은 방향)</td>
+</tr>
+<tr>
+<td>프랜차이즈 비중 (0 → 0.45)</td>
+<td>+8.8%</td>
+<td>브랜드가 검증한 수요가 있는 상권일 수 있음(가설)</td>
+</tr>
+<tr>
+<td>직장인구 (159 → 8,337명)</td>
+<td>+5.3%</td>
+<td>평일 수요 기반이 주말 효율에도 연결되는 것으로 보임(가설)</td>
+</tr>
+<tr>
+<td>집객시설 수 (5 → 60개)</td>
+<td>−5.8%</td>
+<td>효율 '수준'과는 +였지만(EDA), 과거 수준을 통제하면 −: 이미 높아 더 오르기 어려운 것으로 보임(가설)</td>
+</tr>
+<tr>
+<td>지하철역 (0 → 1개)</td>
+<td>−3.9%</td>
+<td>위와 같은 해석(가설)</td>
+</tr>
+<tr>
+<td>주말 유동인구, 상주인구</td>
+<td>두 방법 방향 불일치</td>
+<td>해석 보류</td>
+</tr>
+</tbody>
+</table></div>
+<p>모두 상관관계이며, '점포를 늘리면 효율이 오른다'는 인과가 아니다.</p>
+<h2 id="modeling-5">5. 모델 활용: 팝업 후보 고르기 (<code>notebooks/3.0</code>)</h2>
+<ol>
+<li>검증을 마친 M3를 타겟 2021~2025 전체로 다시 학습해, 2025년 값으로 <strong>2026년 같은 분기 효율</strong>을 예측했다.</li>
+<li>예측 효율 순으로만 고르면 상위 15곳이 모두 발달상권·관광특구(잠실역·명동 등)라, 누구나 아는 답이 된다.</li>
+<li>그래서 <strong>'뻔한 조건(B3)으로 기대되는 효율 대비 몇 배인가'</strong> 상위 15곳을 후보로 골랐다(주말 유동인구 상권 중앙값 이상). → 골목상권 14곳 + 전통시장 1곳.</li>
+<li>한국부동산원 임대료를 붙여 <strong>기대 주말 매출 × 임대료 사분면</strong>으로 순위를 정했다(효율 ÷ 임대료 나눗셈은 단위·척도 문제로 쓰지 않음, 코치 확인).</li>
+</ol>
+<p><img alt="후보 사분면" src="../assets/fig/16_candidates_rent_quadrant.png" /></p>
+<div class="tbl-wrap"><table>
+<thead>
+<tr>
+<th>칸</th>
+<th>상권 (기대 주말 매출 억 원/분기, 임대료 천원/㎡)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>① 매출↑ 임대료↓</td>
+<td>서촌 배화여대(7.8, 44.5) · 망리단길(6.4, 41.1) · 연남(4.8, 56.1) · 송리단길(4.6, 36.4)</td>
+</tr>
+<tr>
+<td>② 매출↑ 임대료↑</td>
+<td>경의선책거리(7.8, 62.2) · 서원동상점가(7.3, 67.6)</td>
+</tr>
+<tr>
+<td>③ 매출↓ 임대료↓</td>
+<td>연희대우아파트앞(3.8, 40.8)</td>
+</tr>
+<tr>
+<td>④ 매출↓ 임대료↑</td>
+<td>성수동카페거리 · 홍대 땡땡거리 · 성산중학교 · 성신여대입구역 4번</td>
+</tr>
+<tr>
+<td>임대료 정보 없음</td>
+<td>문래예술촌 · 삼전역 1번 · 외대앞역 1번 · 우장산역 4번 (현장 확인 필요)</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>한 해만 튄 상권이 아닌지 확인했다: 후보 15곳의 연도별 주말 효율 백분위(각 연도 서울 상권 중)는 2021~2025년 내내 <strong>57~94</strong> 범위였다(<code>notebooks/3.0</code> 5-1).</li>
+</ul>
+<h2 id="modeling-6">6. 한계와 개선 방향</h2>
+<div class="tbl-wrap"><table>
+<thead>
+<tr>
+<th>한계</th>
+<th>영향</th>
+<th>개선 방향</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>M3의 MAE가 B1보다 큼</td>
+<td>상권별 효율 '값'을 그대로 믿으면 안 됨</td>
+<td>순위·선별 용도로만 사용. 개선: 하이퍼파라미터 튜닝(시간 순 교차검증), MAE 기준 손실 함수 비교</td>
+</tr>
+<tr>
+<td>검증 연도가 2025 하나</td>
+<td>결과가 한 해의 특성일 수 있음</td>
+<td>2023·2024를 각각 검증 연도로 둔 시간 순 교차검증</td>
+</tr>
+<tr>
+<td>기대 주말 매출은 '유동인구가 2025년과 같다'는 가정</td>
+<td>유동인구가 바뀌면 규모 추정이 달라짐</td>
+<td>유동인구도 함께 예측하거나 범위로 제시</td>
+</tr>
+<tr>
+<td>임대료는 부동산원 상권(후보보다 넓음)의 소규모 상가 평균</td>
+<td>지역의 대략적 수준일 뿐, 팝업 대관료가 아님</td>
+<td>후보 확정 후 현장·중개 시세 확인</td>
+</tr>
+<tr>
+<td>사분면 경계 = 후보 중앙값</td>
+<td>경계 근처(송리단길 4.61억 = 중앙값)는 칸이 바뀔 수 있음</td>
+<td>경계 민감도 표 제시</td>
+</tr>
+<tr>
+<td>매출은 카드 기반 추정·명목 금액</td>
+<td>현금·온라인 미포함, 물가 미반영</td>
+<td>해석 시 명시</td>
+</tr>
+<tr>
+<td>상관관계 기반</td>
+<td>'조건을 바꾸면 효율이 오른다'는 인과가 아님</td>
+<td>결론은 상권 선택에만 사용</td>
+</tr>
+<tr>
+<td>상권 단위 분석</td>
+<td>상권 평균이 그 안의 점포 하나에 그대로 적용되지 않음</td>
+<td>결론은 '어느 상권'까지만, 점포 단위 판단으로 옮기지 않음</td>
+</tr>
+</tbody>
+</table></div><div class="part-head" id="part-insight">PART · 인사이트 리포트</div><h1>인사이트 리포트</h1>
+<p><strong>주제</strong> 주말 베이커리 카페 팝업스토어 어디에 열까? — 주말 유동인구 대비 카페·베이커리 매출 × 임대료로 고른 후보 상권<br />
+<strong>작성</strong> 이지민 · ABA3 1차 프로젝트 (유통) · 2026-10-22<br />
+<strong>대시보드</strong> https://zmnl-debug.github.io/weekend-bakery-popup/<br />
+<strong>읽는 사람</strong> 다음 시즌 주말 팝업 상권을 정하는 베이커리 카페 브랜드 마케터</p>
+<blockquote>
+<p>근거 숫자의 계산 기준은 <code>references/metric_definitions.md</code>, 분석 과정은 <code>reports/EDA_report.md</code>·<code>reports/modeling_report.md</code>에 있다. 모든 결과는 <strong>상권 단위 상관관계</strong>이며 인과가 아니다. '제안'으로 표시한 문장은 데이터에서 출발한 해석이다.</p>
+</blockquote>
+<hr />
+<h2 id="insight-1">한 줄 결론</h2>
+<p><strong>사람이 많은 큰 상권보다, 같은 조건의 상권보다 카페가 잘 팔리고 임대료가 낮은 카페 골목 — 서촌(배화여대 일대)·망리단길·연남·송리단길 — 을 주말 팝업 1순위 후보로 제안한다.</strong> 실행 순서는 <strong>비용 부담이 가장 낮은 서촌(2분기) → 유일하게 성장 중인 송리단길(4분기) → 연남(4분기)</strong>이며, 망리단길은 2년 새 주말 매출이 25% 줄었지만 검색 관심은 늘어(+42%, 망원동) <strong>가게가 늘며 손님을 나눠 갖는 상권</strong>이라, 차별화 메뉴로 <strong>짧게 테스트</strong>한다(인사이트 7).</p>
+<hr />
+<h2 id="insight-2">인사이트 1. 사람이 많이 지나간다고 카페가 잘 팔리는 곳은 아니다</h2>
+<p><img alt="가설 1" src="../assets/fig/06_h1_foot_decile_box.png" /></p>
+<ul>
+<li>주말 유동인구와 주말 카페·베이커리 매출의 상관은 <strong>0.24</strong>(스피어만)로 약하다.</li>
+<li>2025년 골목상권 중 1년간 주말 유동인구가 비슷한 마포FM(86만 명)과 수락산디자인거리(95만 명)의 1년간 주말 카페·베이커리 매출은 <strong>0.06억 vs 6.18억 원, 약 100배</strong> 차이다(2025년 4개 분기 합계).</li>
+<li><strong>의미</strong>: "유동인구 = 좋은 팝업 입지"라는 통념만으로 고르면 비용만 크고 매출로 이어지지 않는 상권을 고를 수 있다. 마케터가 후보를 비교할 때는 <strong>지나가는 사람 1천 명당 카페 매출(효율)</strong>을 함께 보는 것을 제안한다.</li>
+</ul>
+<h2 id="insight-3">인사이트 2. 다음 분기는 '지난 분기 그대로', 1년 뒤는 '상권 조건'이 갈린다</h2>
+<p><img alt="다음 분기 vs 1년 뒤" src="../assets/fig/13_rmsle_next_vs_1year.png" /></p>
+<ul>
+<li>다음 분기 효율은 지난 분기 값 그대로(RMSLE 0.670)를 어떤 모델도 의미 있게 이기지 못했다 → 효율은 분기 사이에 거의 변하지 않는다.</li>
+<li>1년 뒤를 예측할 때는 상권 조건을 더한 모델이 RMSLE를 5.2% 줄였다(0.939 → 0.890). 단 평균 오차(MAE)는 더 커서, 값이 아니라 <strong>순위를 고르는 용도</strong>로만 쓴다.</li>
+<li><strong>의미 (제안)</strong>: 바로 다음 시즌 팝업이라면 마케터는 '최근 실적이 좋은 상권'을 보면 충분하다. 1년 단위로 매장·팝업 로드맵을 짤 때는 <strong>카페가 모여 있는지, 직장인구가 있는지 같은 상권 조건</strong>도 함께 본다.</li>
+</ul>
+<h2 id="insight-4">인사이트 3. 카페가 모인 골목일수록 점포당 매출도 높았다 — 잠식보다 집적에 가깝다</h2>
+<p><img alt="부분 의존도" src="../assets/fig/15_m3_1year_partial_dependence.png" /></p>
+<ul>
+<li>같은 유형·같은 유동인구 수준의 상권끼리 비교하면, 카페·베이커리 점포가 많은 구간의 <strong>점포당 주말 매출이 1.9배</strong>(스피어만 0.26, EDA 가설 3).</li>
+<li>1년 뒤 예측 모델에서도 다른 조건이 같을 때 점포 수가 많은(5 → 54개) 상권의 예측 효율이 <strong>+25.3%</strong> 높다(두 분석 방법의 방향 일치).</li>
+<li><strong>의미 (제안)</strong>: 경쟁 카페가 많은 골목을 피하기보다, <strong>카페 목적의 방문객이 이미 모이는 '카페 거리'에 들어가는 편</strong>이 팝업에 유리할 수 있다. 상관관계이며, '카페를 더 모으면 매출이 오른다'는 인과나 점포 하나의 성과를 뜻하지 않는다.</li>
+</ul>
+<h2 id="insight-5">인사이트 4. 효율이 높아도 비싼 곳이 있다 — 비용까지 보면 순위가 바뀐다</h2>
+<p><img alt="후보 사분면" src="../assets/fig/16_candidates_rent_quadrant.png" /></p>
+<ul>
+<li>효율 순으로만 고르면 상위 15곳이 모두 발달상권·관광특구(잠실역·명동 등)라, 누구나 아는 답이 된다. 그래서 <strong>'같은 조건 상권 대비 효율이 몇 배인가'</strong>로 후보 15곳을 고르고(골목 14·전통시장 1), 한국부동산원 임대료를 붙였다.</li>
+<li>성수동카페거리·홍대 일대는 같은 조건 대비 효율이 높지만 임대료(62~63천원/㎡)가 후보 중앙값(58.3)보다 높고 기대 매출은 중앙값보다 낮아 <strong>④칸</strong>으로 밀렸다.</li>
+<li>기대 매출이 높고 임대료가 낮은 <strong>①칸</strong>: 서촌 배화여대(7.8억/분기, 44.5천원/㎡) · 망리단길(6.4억, 41.1) · 연남(4.8억, 56.1) · 송리단길(4.6억, 36.4). 단 송리단길은 기대 매출이 후보 중앙값(4.61억)과 같아 경계에 걸쳐 있다.</li>
+<li>후보는 한 해만 튄 상권이 아니다: 15곳의 연도별 주말 효율 백분위(각 연도 서울 상권 중)는 2021~2025년 내내 57~94였다.</li>
+<li><strong>의미</strong>: '요즘 뜨는 카페 상권'(성수·홍대)이 팝업 비용 대비 최선은 아닐 수 있다. 비슷한 고객층(인사이트 5)을 더 낮은 임대료로 만날 수 있는 골목이 있다.</li>
+</ul>
+<h2 id="insight-6">인사이트 5. 1순위 4곳의 손님은 20~30대 여성, 주말 — 그러나 사는 방식이 둘로 나뉜다</h2>
+<p><img alt="소비자 렌즈" src="../assets/fig/17_candidates_consumer_profile.png" /></p>
+<div class="tbl-wrap"><table>
+<thead>
+<tr>
+<th>지표 (2025년 카페·베이커리 매출)</th>
+<th>서촌 배화여대</th>
+<th>연남</th>
+<th>망리단길</th>
+<th>송리단길</th>
+<th>서울 상권 중앙값</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>20대 비중</td>
+<td>31%</td>
+<td>40%</td>
+<td>36%</td>
+<td>37%</td>
+<td>13.5%</td>
+</tr>
+<tr>
+<td>30대 비중</td>
+<td>32%</td>
+<td>32%</td>
+<td>33%</td>
+<td>33%</td>
+<td>25.4%</td>
+</tr>
+<tr>
+<td>여성 비중</td>
+<td>71%</td>
+<td>69%</td>
+<td>65%</td>
+<td>62%</td>
+<td>55.6%</td>
+</tr>
+<tr>
+<td>주말 비중</td>
+<td>39%</td>
+<td>45%</td>
+<td>43%</td>
+<td>41%</td>
+<td>29.7%</td>
+</tr>
+<tr>
+<td>오후(14~17시) 비중</td>
+<td><strong>40%</strong></td>
+<td><strong>42%</strong></td>
+<td>33%</td>
+<td>27%</td>
+<td>25.5%</td>
+</tr>
+<tr>
+<td>저녁(17~21시) 비중</td>
+<td>21%</td>
+<td>29%</td>
+<td>23%</td>
+<td><strong>35%</strong></td>
+<td>21.8%</td>
+</tr>
+<tr>
+<td>객단가</td>
+<td><strong>1.42만 원</strong></td>
+<td><strong>1.48만 원</strong></td>
+<td>0.78만 원</td>
+<td>1.14만 원 (서울보다는 높음)</td>
+<td>0.83만 원</td>
+</tr>
+<tr>
+<td>주말 유동인구 (분기 평균)</td>
+<td>34만 명</td>
+<td>32만 명</td>
+<td><strong>152만 명</strong></td>
+<td>71만 명</td>
+<td>21.7만 명</td>
+</tr>
+<tr>
+<td>주말 1천 명당 매출 (2026 예측)</td>
+<td><strong>230만 원</strong></td>
+<td><strong>147만 원</strong></td>
+<td>42만 원</td>
+<td>65만 원</td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<p>연령·성별·시간대는 요일 구분 없는 매출 기준, 주말 비중만 주말 매출 기준. 서울 중앙값은 2025년 카페·베이커리 매출이 있는 상권 1,107곳 기준(주말 유동인구는 4개 분기가 모두 있는 1,050곳 기준, 값은 같음).</p>
+<ul>
+<li>네 곳 모두 서울 상권보다 <strong>20대·30대·여성·주말 비중이 높다</strong> → 이 상권에서 주말 팝업의 주 고객은 20~30대 여성일 가능성이 크다(상권 매출 구성이며 개별 고객 정보가 아님).</li>
+<li>그런데 매출을 만드는 방식은 둘로 갈린다.</li>
+<li><strong>머무는 골목 (서촌 배화여대·연남)</strong>: 지나가는 사람은 후보 4곳 중 적지만(32~34만 명, 서울 중앙값보다는 많음) 1천 명당 매출이 높고, 오후 비중이 40%대, 객단가가 1.4만 원대 → 머물면서 여러 개를 사는 손님이 많은 것으로 보인다.</li>
+<li><strong>지나가는 골목 (망리단길·송리단길)</strong>: 사람은 많지만(71~152만 명) 1천 명당 매출은 낮고 오후 비중도 낮다(27~33%). 망리단길은 객단가가 낮고(0.78만 원), 송리단길은 객단가는 서울보다 높지만 저녁 비중이 높다(35%) → 지나가다 사는 손님 비중이 큰 것으로 보인다. 두 곳의 성격은 서로 다르다(망리단길 = 가벼운 구매, 송리단길 = 저녁 수요).</li>
+<li>후보는 이미 효율이 높은 상권으로 고른 집단이라, 서울 전체와의 차이에는 선택 효과가 섞여 있다.</li>
+</ul>
+<h2 id="insight-7">인사이트 6. 실제 지도와 검색으로 보면 — 1순위 중 서촌은 빵집 경쟁이 덜하고 검색 관심 비중이 커지고 있다</h2>
+<p>서울시 데이터에는 '베이커리 카페' 업종이 따로 없어, 두 가지 외부 데이터로 1순위 상권을 다시 봤다(순위는 바꾸지 않음).</p>
+<p><strong>① 대리 지표 검증 (카카오 로컬, 상권 중심 반경 500m, 서울 상권 1,107곳)</strong><br />
+- 카카오 로컬 기준 상권 중심 반경 500m의 장소 수와 서울시 점포 수의 스피어만 상관은 카페 <strong>0.48</strong>, 베이커리 <strong>0.39</strong>로 방향이 같아, 서울시 점포 수가 업종이 모인 정도의 <strong>상대적 순서</strong>를 대략 반영한다.<br />
+- 그러나 '베이커리카페'로 검색되는 장소 수(상권당 중앙값 1곳)는 제과점 점포 수와 0.23으로 상관이 약하다 → 대리 지표를 '베이커리 카페' 점포 수의 정확한 대용으로 보지 않고, 후보 주변 실제 현황은 카카오 검색 결과(그림 18)로 따로 제시한다.</p>
+<p><img alt="후보 주변 베이커리 카페" src="../assets/fig/18_candidates_bakery_cafe_kakao.png" /></p>
+<p><strong>② 관심(네이버 데이터랩 '○○ 카페' 검색, 서울 카페 = 100, 2025년 평균)</strong> — 처음 조회에서 측정되지 않은 곳 중 망리단길은 <strong>망원동</strong>, 경의선책거리·땡땡거리는 <strong>홍대</strong>로 다시 조회했다(10/22, 생활권 이름이라 상권보다 넓음). 삼전동·외대앞·우장산 3곳은 여전히 측정 불가. 변화율은 '서울 카페' 검색 대비 비중의 변화다.</p>
+<p><img alt="관심 × 소비" src="../assets/fig/19_candidates_interest_x_sales.png" /></p>
+<div class="tbl-wrap"><table>
+<thead>
+<tr>
+<th>1순위 상권</th>
+<th>반경 500m 베이커리카페</th>
+<th>반경 500m 베이커리</th>
+<th>검색 관심 (2023→2025)</th>
+<th>읽기</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>서촌 배화여대</td>
+<td>2곳</td>
+<td>20곳</td>
+<td>256 (<strong>+95%</strong>)</td>
+<td>1순위 4곳 중 빵집이 가장 적음(서울 중앙값보다는 많음), 서울 카페 대비 관심 비중이 2년 새 약 2배</td>
+</tr>
+<tr>
+<td>연남</td>
+<td>2곳</td>
+<td><strong>65곳</strong></td>
+<td><strong>370</strong> (+6%)</td>
+<td>관심이 가장 높지만 빵집이 매우 많음 → 차별화 필요</td>
+</tr>
+<tr>
+<td>송리단길</td>
+<td><strong>8곳</strong> (서울 상위 2%)</td>
+<td>29곳</td>
+<td>207 (+32%)</td>
+<td>이미 '베이커리 카페 거리' → 집적 효과와 경쟁이 함께</td>
+</tr>
+<tr>
+<td>망리단길</td>
+<td>4곳</td>
+<td><strong>67곳</strong></td>
+<td>232 (<strong>+42%</strong>, '망원동'으로 재조회)</td>
+<td>빵집이 매우 많고, <strong>관심은 늘었는데 매출은 줄었다</strong>(인사이트 7)</td>
+</tr>
+</tbody>
+</table></div>
+<p>서울 상권 중앙값(반경 500m): 베이커리카페 1곳, 베이커리 13곳, 카페 64곳. 조회일 2026-10-19.</p>
+<ul>
+<li>성수동·합정은 검색 관심이 서울 카페의 2배 이상(231)으로 높지만 2025년 주말 카페 매출은 후보 중에서 낮은 편(3.8~4.2억)이고 임대료도 높다(④칸) → <strong>화제성이 곧 팝업 효율은 아니다</strong>(인사이트 4와 같은 방향). 관심 중앙값이 이 두 곳·망원동 근처(약 231)에 몰려 있어 사분면 칸 이름보다 값으로 읽는다.</li>
+<li><strong>의미 (제안)</strong>: 같은 1순위라도 서촌은 '네 곳 중 빵집 경쟁은 덜하고 관심은 오르는 곳', 연남·망원은 '빵집이 많아 차별화가 필요한 곳', 송리단길은 '베이커리 카페가 모인 거리'로 접근이 달라야 한다.</li>
+<li>한계: 키워드 검색이라 이름·분류 기준이고, 반경 500m는 상권 경계와 다르다. 검색어는 상권보다 넓은 지역명이며 검색 ≠ 방문이다. 장소·검색 데이터는 2026년 조회 기준이고 매출은 2025년 기준이다.</li>
+</ul>
+<h2 id="insight-8">인사이트 7. 실무로 옮기면 — 언제, 얼마를 걸고, 무엇을 목표로</h2>
+<p><img alt="추세와 시기" src="../assets/fig/20_candidates_trend_season.png" /></p>
+<p><strong>① 1순위라도 망리단길은 '꺾이는 상권'이다 — 다만 관심이 식은 게 아니라 나눠 먹는 중</strong><br />
+- 2023 → 2025년 주말 카페·베이커리 매출 <strong>−25%</strong>, 같은 기간 점포는 154 → 162개로 늘어 <strong>점포당 주말 매출은 −29%</strong>.<br />
+- 그런데 '망원동 카페' 검색 관심(서울 카페 대비)은 같은 기간 <strong>+42%</strong>였다. 사람들의 관심은 늘었는데 카드 매출은 줄고 가게는 늘었다 → 상권이 식었다기보다 <strong>늘어난 가게들이 손님을 나눠 갖고 있을 가능성</strong>이 크다(해석. 검색어 '망원동'은 망원시장 등 상권보다 넓은 범위를 포함).<br />
+- 실무적으로는 '피할 곳'보다 <strong>차별화 없이 들어가면 묻히는 곳</strong>에 가깝다. 단기 테스트로 반응을 보되, 이미 많은 빵집(반경 500m 67곳)과 겹치지 않는 메뉴로 들어가야 한다.<br />
+- 1년 뒤 모델은 2026년을 +3%로 예측했지만 최근 추세와 반대다. 모델은 순위 선별용이라, <strong>후보를 고른 뒤 최근 2년 추세를 따로 확인하는 단계</strong>가 필요하다.<br />
+- 반대로 <strong>송리단길은 1순위 중 유일하게 성장</strong>(주말 매출 +15%, 점포당 +12%, 검색 관심 비중 +32%)하고 있다. 성수동 카페거리(+290%)는 가장 빠르게 크지만 임대료·필요 점유율이 높다(④칸).</p>
+<p><strong>② 비용을 회수하려면 상권 주말 매출의 몇 %를 가져와야 하나</strong> (월 임대료 × 33㎡ ÷ 월 주말 카페·베이커리 매출, 임대료만 반영한 최소치)</p>
+<div class="tbl-wrap"><table>
+<thead>
+<tr>
+<th>상권</th>
+<th>월 임대료(33㎡)</th>
+<th>필요 점유율 (임대료 그대로)</th>
+<th>필요 점유율 (대관료 = 임대료 × 3)</th>
+<th>주말 하루 필요 고객 (× 3)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>서촌 배화여대</td>
+<td>147만 원</td>
+<td><strong>0.57%</strong></td>
+<td>1.70%</td>
+<td><strong>36명</strong></td>
+</tr>
+<tr>
+<td>망리단길</td>
+<td>136만 원</td>
+<td>0.63%</td>
+<td>1.90%</td>
+<td>60명</td>
+</tr>
+<tr>
+<td>송리단길</td>
+<td>120만 원</td>
+<td>0.78%</td>
+<td>2.35%</td>
+<td>36명</td>
+</tr>
+<tr>
+<td>연남</td>
+<td>185만 원</td>
+<td>1.17%</td>
+<td>3.50%</td>
+<td>43명</td>
+</tr>
+<tr>
+<td>경의선책거리 (대안)</td>
+<td>205만 원</td>
+<td>0.79%</td>
+<td>2.38%</td>
+<td>95명</td>
+</tr>
+<tr>
+<td>성수동 카페거리 (④칸)</td>
+<td>207만 원</td>
+<td>1.51%</td>
+<td>4.54%</td>
+<td>70명</td>
+</tr>
+</tbody>
+</table></div>
+<p>주말 하루 필요 고객 = 월 비용 ÷ 한 달 주말 8.7일 ÷ 상권 객단가. 원재료·인건비는 빠진 최소치라 <strong>절대값보다 후보 간 비교</strong>로 읽는다.<br />
+- 서촌은 가져와야 할 몫이 가장 작고(객단가가 높아 하루 36명이면 됨), 망리단길·경의선책거리는 객단가가 낮아 <strong>같은 비용에 더 많은 손님</strong>이 필요하다.</p>
+<p><strong>③ 언제 열까</strong> (분기별 주말 매출 지수, 2023~2025 평균, 상권 평균 분기 = 100)<br />
+- 서울 전체로 <strong>1분기가 가장 약하다(94.8)</strong> → 1분기 오픈은 피한다.<br />
+- 서촌 <strong>2분기 107</strong>(봄), 송리단길 <strong>4분기 106</strong>·1분기 90, 연남 <strong>4분기 107</strong>·3분기 93 → 상권마다 강한 시즌이 다르다.<br />
+- 토요일 매출 비중은 후보 대부분 51~57%로 서울(54%)과 비슷하다. 일요일도 매출의 절반 가까이를 차지하므로 <strong>이틀 모두 운영</strong>하고, 1천 명당 매출이 6~19% 높은 <strong>토요일에 인력·재고를 더 둔다</strong>.</p>
+<p><strong>의미 (제안)</strong>: 한 시즌에 한 곳씩 '비용이 낮고 시즌이 맞는 곳'부터 연다 — <strong>2분기 서촌 → 4분기 송리단길·연남</strong>. 망리단길은 매출은 줄고 관심은 늘어난 '경쟁 과열' 상권이라 차별화 메뉴로 1~2주 테스트해 반응을 본 뒤 확대 여부를 정한다. 각 팝업의 <strong>주말 하루 목표 고객 수</strong>(위 표)를 KPI로 두면 '얼마나 팔아야 성공인가'를 미리 정할 수 있다.</p>
+<hr />
+<h2 id="insight-9">실행 제안 — 상권별 팝업 운영안 (제안)</h2>
+<div class="tbl-wrap"><table>
+<thead>
+<tr>
+<th>상권</th>
+<th>유형</th>
+<th>목표</th>
+<th>운영 시간</th>
+<th>상품·경험</th>
+<th>근거</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>서촌 배화여대 일대</strong></td>
+<td>머무는 골목 · <strong>1번째(2분기)</strong></td>
+<td>객단가·브랜드 경험, KPI 주말 하루 36명+</td>
+<td>오후 중심 (13~18시)</td>
+<td>디저트 페어링·선물 세트 등 객단가 높은 구성, 앉아서 머무는 공간. 1순위 4곳 중 주변 빵집이 가장 적어(반경 500m 20곳) 베이커리 콘셉트가 눈에 띄기 쉬움(가설)</td>
+<td>오후 40%, 객단가 1.42만 원, 여성 71%, 임대료 44.5, 서울 카페 대비 검색 관심 2년 새 +95%</td>
+</tr>
+<tr>
+<td><strong>연남</strong></td>
+<td>머무는 골목 · <strong>4분기</strong></td>
+<td>20대 신규 고객·SNS 확산, KPI 43명+</td>
+<td>오후~초저녁 (13~19시)</td>
+<td>한정 빵·포토존 등 공유하고 싶은 경험. 반경 500m 빵집 65곳(서울 중앙값 13)·제과점 매출 비중 11%로 베이커리 경쟁이 많아 차별화 메뉴 필요</td>
+<td>20대 40%, 주말 45%, 객단가 1.48만 원, 검색 관심 후보 최고(370)</td>
+</tr>
+<tr>
+<td><strong>망리단길</strong></td>
+<td>지나가는 골목 · <strong>단기 테스트</strong></td>
+<td>인지도·시식, 매출 −25%·점포당 −29%지만 관심 +42% → 기존 빵집(67곳)과 겹치지 않는 메뉴로 1~2주 반응 확인 후 확대</td>
+<td>주말 낮 전체</td>
+<td>테이크아웃 단품·시식으로 많이 노출, 쿠폰·앱 가입 등 다음 방문 연결</td>
+<td>주말 유동 152만 명(분기 평균), 주말 43%, 객단가 0.78만 원, 임대료 41.1(①칸 중 두 번째로 낮음)</td>
+</tr>
+<tr>
+<td><strong>송리단길</strong></td>
+<td>지나가는 골목 · <strong>2번째(4분기)</strong></td>
+<td>저녁 수요 공략, 성장 상권 선점, KPI 36명+</td>
+<td>오후~저녁 (15~21시)</td>
+<td>저녁 디저트·빵 테이크아웃. 베이커리 카페 8곳이 모인 거리라 '빵 투어' 동선에 들어가는 구성</td>
+<td>저녁 35%, 임대료 36.4(후보 최저), 반경 500m 베이커리카페 8곳</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>두 번째 선택지</strong>: 경의선책거리(②, 기대 매출 7.8억으로 최고 수준이나 임대료 62.2)는 예산이 충분할 때. 임대료 정보가 없는 문래예술촌·삼전역·외대앞역·우장산역은 <strong>현장 시세 확인 후</strong> 다시 비교한다.</p>
+<p><strong>마케터가 반복해서 쓰는 방법</strong><br />
+1. 분기 데이터가 나오면 1년 뒤 효율을 다시 예측하고, '같은 조건 대비 배수'로 후보를 뽑는다.<br />
+2. 후보에 임대료를 붙여 기대 매출 × 임대료 사분면으로 순위를 정한다.<br />
+3. <strong>최근 2년 주말 매출·점포당 매출 추세</strong>를 확인해 하락 상권은 단기 테스트로 낮춘다(모델이 최근 하락을 놓칠 수 있음).<br />
+4. 1순위 칸 상권의 고객 구성(연령·시간대·객단가)을 보고 '머무는 골목'인지 '지나가는 골목'인지에 맞춰 운영안을 고르고, 강한 분기에 맞춰 시기를 정한다.<br />
+5. 비용 ÷ 객단가로 <strong>주말 하루 목표 고객 수</strong>를 KPI로 정하고, 운영 후 실제 매출로 이 순서를 검증한다.</p>
+<hr />
+<h2 id="insight-10">한계와 다음 단계</h2>
+<ul>
+<li><strong>상관관계·상권 단위 결과</strong>다. 팝업을 열면 이만큼 팔린다는 예측이 아니며, 실제 성과는 브랜드·상품·운영에 따라 다르다.</li>
+<li>매출은 카드 결제 기반 <strong>추정·명목</strong> 금액이고, 연령·시간대 매출에는 요일 구분이 없다.</li>
+<li>임대료는 부동산원 상권(후보보다 넓음)의 소규모 상가 평균이며 <strong>팝업 대관료가 아니다</strong>.</li>
+<li>기대 주말 매출은 '1년 뒤에도 유동인구가 2025년과 같다'는 가정을 깔고 있고, 예측 모델의 평균 오차는 기준선보다 크다(순위 선별 용도).</li>
+<li>사분면 경계는 후보 중앙값이라 경계 근처 상권(송리단길)은 값이 조금만 달라도 칸이 바뀐다.</li>
+<li>필요 점유율·하루 고객 수는 임대료만 반영하고 33㎡·한 달 주말 8.7일을 가정한 최소치이며, 실제 팝업 대관료는 장기 임대료보다 비쌀 수 있어 배수(× 3)로 민감도를 함께 봤다.</li>
+<li>'머무는 / 지나가는 골목' 구분은 효율·객단가·시간대 숫자에서 나온 해석이다. 현장 관찰로 확인이 필요하다.</li>
+<li>외부 데이터(카카오 장소, 네이버 검색)는 키워드 기준·조회 시점(2026) 기준이라 매출(2025)과 시점이 다르다. 대리 지표 검증 상관은 중간 정도(0.39~0.48)다.</li>
+<li><strong>다음 단계</strong>: 삼전동·외대앞·우장산은 여전히 검색으로 측정되지 않아 현장 확인 / 팝업 운영 후 실제 매출로 이 순위를 검증.</li>
+</ul>
+<h2 id="insight-11">데이터 출처</h2>
+<ul>
+<li>서울열린데이터광장 「서울시 상권분석서비스」 (서울특별시) — https://data.seoul.go.kr/dataList/3/literacyView.do</li>
+<li>한국부동산원 「상업용부동산 임대동향조사」 지역별 임대료(소규모 상가) (공공데이터포털) — https://www.data.go.kr/data/15069766/fileData.do</li>
+<li>카카오 로컬 API 키워드 장소 검색 (2026-10-19 조회) — https://developers.kakao.com</li>
+<li>네이버 데이터랩 검색어트렌드 (2026-10-19 조회) — https://datalab.naver.com</li>
+</ul></article>
+  </div>
+</main>
+<footer>데이터 출처: 서울열린데이터광장 「서울시 상권분석서비스」, 한국부동산원 「상업용부동산 임대동향조사」, 카카오 로컬 API, 네이버 데이터랩. 분석 코드: GitLab aba3-project1-jm. 모든 결과는 상권 단위 상관관계이며 인과가 아닙니다.</footer>
+</body>
+</html>
